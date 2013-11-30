@@ -18,11 +18,11 @@ module SpeedGun
   end
 
   def self.active?
-    !!current
+    current && current.active?
   end
 
   def self.enable?
-    true
+    config.enable?
   end
 end
 

@@ -14,9 +14,10 @@ class SpeedGun::Middleware
 
     status, headers, body = *SpeedGun.current.profile(:rack) { @app.call(env) }
     inject_header(headers)
-    p SpeedGun.current.profiles
 
     return [status, headers, body]
+  ensure
+    SpeedGun.current = nil
   end
 
   private

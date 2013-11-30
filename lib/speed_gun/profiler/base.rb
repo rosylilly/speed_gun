@@ -22,7 +22,7 @@ class SpeedGun::Profiler::Base
     profiler = self.profiler_type
     klass.send(:alias_method, without_profiling, method_name)
     klass.send(:define_method, with_profiling) do |*args, &block|
-      return send(without_profiling, *args, &block) unless SpeedGun.active?
+      return send(without_profiling, *args, &block) unless SpeedGun.current
 
       profile_args = [self] + args
       SpeedGun.current.profile(profiler, *profile_args) do
