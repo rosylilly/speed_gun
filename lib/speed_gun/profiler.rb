@@ -30,15 +30,16 @@ class SpeedGun::Profiler
   end
 
   def initialize(env)
+    @id = SecureRandom.uuid
     @path = env['PATH_INFO']
     @query = env['QUERY_STRING']
     @env = env
     @requested_at = Time.now
-    @id = SecureRandom.uuid
+    @total = 0
     @profiles = []
     @active = true
   end
-  attr_reader :id, :profiles
+  attr_reader :id, :total, :profiles
 
   def profile(type, *args, &block)
     profiler = PROFILERS[type]
@@ -54,15 +55,16 @@ class SpeedGun::Profiler
     @active
   end
 
-  def active!
+  def activate!
     @active = true
   end
 
-  def deactive!
+  def deactivate!
     @active = false
   end
 
   def dump
+    @total = Time.now - @requested_at
     SpeedGun.store[id] = to_msgpack
   end
 

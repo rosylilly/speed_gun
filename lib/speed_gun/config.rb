@@ -24,4 +24,8 @@ class SpeedGun::Config < Hash
   def store
     self[:store] ||= SpeedGun::Store::Memory.new
   end
+
+  def auto_inject?
+    fetch(:auto_inject, true)
+  end
 end
