@@ -16,4 +16,8 @@ class SpeedGun::Config < Hash
   def prefix
     self[:prefix] ||= '/speed_gun'
   end
+
+  def prefix_regexp
+    self[:prefix_regexp] ||= /^#{Regexp.escape(prefix)}/x
+  end
 end
