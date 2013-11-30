@@ -12,5 +12,14 @@ class SpeedGun::Railtie < ::Rails::Railtie
     ActiveSupport.on_load(:action_view) do
       require 'speed_gun/profiler/action_view'
     end
+
+    ActiveSupport.on_load(:active_record) do
+      require 'speed_gun/profiler/active_record'
+
+      SpeedGun::Profiler::ActiveRecord.hook_method(
+        ActiveRecord::Base.connection.class,
+        :execute
+      )
+    end
   end
 end
