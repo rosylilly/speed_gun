@@ -11,11 +11,11 @@ class SpeedGun::Profiler
   end
   attr_reader :id, :profiles
 
-  def profile(type, &block)
+  def profile(type, *args, &block)
     profiler = PROFILERS[type]
 
     if profiler
-      profiler.profile(self, &block)
+      profiler.profile(self, *args, &block)
     else
       yield
     end
