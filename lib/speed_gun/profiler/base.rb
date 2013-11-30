@@ -1,6 +1,10 @@
 require 'speed_gun/profiler'
 
 class SpeedGun::Profiler::Base
+  def self.label
+    self.name.sub(/.*::/, '')
+  end
+
   def self.profiler_type
     self.name\
       .sub(/.*::/, '')\
