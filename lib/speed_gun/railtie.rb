@@ -5,6 +5,8 @@ class SpeedGun::Railtie < ::Rails::Railtie
   initializer 'speed_gun' do |app|
     app.middleware.insert(0, SpeedGun::Middleware)
 
+    SpeedGun.config[:enable_on] = lambda { Rails.env.development? }
+
     ActiveSupport.on_load(:action_controller) do
       require 'speed_gun/profiler/action_controller'
     end
