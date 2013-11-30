@@ -2,15 +2,15 @@ require 'speed_gun'
 
 class SpeedGun::Config < Hash
   def enable?
-    enable && enable_on.call
+    enable && enable_if.call
   end
 
   def enable
     fetch(:enable, true)
   end
 
-  def enable_on
-    self[:enable_on] ||= lambda { true }
+  def enable_if
+    self[:enable_if] ||= lambda { true }
   end
 
   def prefix
