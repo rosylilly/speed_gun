@@ -8,5 +8,9 @@ class SpeedGun::Railtie < ::Rails::Railtie
     ActiveSupport.on_load(:action_controller) do
       require 'speed_gun/profiler/action_controller'
     end
+
+    ActiveSupport.on_load(:action_view) do
+      require 'speed_gun/profiler/action_view'
+    end
   end
 end
