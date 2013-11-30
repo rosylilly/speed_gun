@@ -20,4 +20,8 @@ class SpeedGun::Config < Hash
   def prefix_regexp
     self[:prefix_regexp] ||= /^#{Regexp.escape(prefix)}/x
   end
+
+  def store
+    self[:store] ||= SpeedGun::Store::Memory.new
+  end
 end

@@ -1,6 +1,5 @@
 require 'speed_gun'
 require 'sinatra/base'
-require 'pathname'
 
 class SpeedGun::App < Sinatra::Base
   configure do

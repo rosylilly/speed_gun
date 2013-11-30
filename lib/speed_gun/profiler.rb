@@ -1,4 +1,5 @@
 require 'speed_gun'
+require 'speed_gun/store'
 require 'securerandom'
 
 class SpeedGun::Profiler
