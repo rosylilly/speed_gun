@@ -24,6 +24,10 @@ module SpeedGun
   def self.enable?
     config.enable?
   end
+
+  def self.store
+    config.store
+  end
 end
 
 require 'speed_gun/version'

@@ -36,6 +36,18 @@ class SpeedGun::Profiler::Base
     klass.send(:alias_method, method_name, with_profiling)
   end
 
+  def self.load(data)
+    type = data.delete('type')
+    profiler = SpeedGun::Profiler::PROFILERS[type.to_sym]
+    profile = profiler.new
+
+    data.each_pair do |key, val|
+      profile.instance_variable_set(:"@#{key}", val)
+    end
+
+    profile
+  end
+
   def self.profile(profiler, *args, &block)
     profile = new
     profiler.profiles << profile
@@ -57,5 +69,18 @@ class SpeedGun::Profiler::Base
     @elapsed_time = Time.now - now
     after_profile(*args, &block) if respond_to?(:after_profile)
     return result
+  end
+
+  def as_msgpack(*args)
+    hash = {}
+    instance_variables.each do |key|
+      hash[key.to_s.sub(/^\@/, '')] = instance_variable_get(key)
+    end
+    hash['type'] = self.class.profiler_type
+    hash
+  end
+
+  def to_msgpack(*args)
+    as_msgpack(*args).to_msgpack(*args)
   end
 end
