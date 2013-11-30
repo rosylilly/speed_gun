@@ -12,4 +12,12 @@ class SpeedGun::App < Sinatra::Base
   get '/' do
     "SpeedGun v#{SpeedGun::VERSION}"
   end
+
+  get '/profile/:id' do
+    profiler = SpeedGun::Profiler.load(params[:id])
+
+    halt 404 unless profiler
+
+    [200, {'Content-Type' => 'application/json'}, profiler.to_json]
+  end
 end

@@ -3,7 +3,7 @@ require 'speed_gun/store/base'
 class SpeedGun::Store::Memory < SpeedGun::Store::Base
   DEFAULT_MAX_ENTRIES = 100
 
-  def initialize(options)
+  def initialize(options = {})
     @max_entries = options[:max_entries] || DEFAULT_MAX_ENTRIES
     @store = {}
     @stored_list = []

@@ -37,12 +37,14 @@ class SpeedGun::Profiler::Base
   end
 
   def self.load(data)
+    data.delete('title')
+    data.delete('label')
     type = data.delete('type')
     profiler = SpeedGun::Profiler::PROFILERS[type.to_sym]
     profile = profiler.new
 
     data.each_pair do |key, val|
-      profile.instance_variable_set(:"@#{key}", val)
+      profile.send(:instance_variable_set, :"@#{key}", val)
     end
 
     profile
@@ -76,7 +78,9 @@ class SpeedGun::Profiler::Base
     instance_variables.each do |key|
       hash[key.to_s.sub(/^\@/, '')] = instance_variable_get(key)
     end
-    hash['type'] = self.class.profiler_type
+    hash['type'] = self.class.profiler_type.to_s
+    hash['label'] = self.class.label
+    hash['title'] = title
     hash
   end
 

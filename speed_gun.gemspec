@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'sinatra', '~> 1.4.0'
   spec.add_dependency 'msgpack', '~> 0.5.0'
+  spec.add_dependency 'multi_json', '~> 1.0'
 end

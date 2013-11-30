@@ -1,12 +1,18 @@
 require 'speed_gun'
 require 'speed_gun/store'
 require 'securerandom'
+require 'msgpack'
+require 'multi_json'
 
 class SpeedGun::Profiler
   PROFILERS = {}
 
   def self.load(id)
-    data = MessagePack.unpack(SpeedGun.store[id])
+    src = SpeedGun.store[id]
+
+    return nil unless src
+
+    data = MessagePack.unpack(src)
 
     profiler = new({})
 
@@ -17,8 +23,10 @@ class SpeedGun::Profiler
       when "profiles"
         val = val.map { |profile| SpeedGun::Profiler::Base.load(profile) }
       end
-      profiler.set_instance_variable(:"@#{key}", val)
+      profiler.send(:instance_variable_set, :"@#{key}", val)
     end
+
+    profiler
   end
 
   def initialize(env)
@@ -70,7 +78,11 @@ class SpeedGun::Profiler
   end
 
   def to_msgpack(*args)
-    as_msgpack(*args).to_msgpack
+    as_msgpack(*args).to_msgpack(*args)
+  end
+
+  def to_json(*args)
+    MultiJson.dump(as_msgpack(*args))
   end
 
   private
