@@ -36,4 +36,12 @@ class SpeedGun::Config < Hash
   def backtrace_includes
     self[:backtrace_includes] ||= [//]
   end
+
+  def show_button?
+    fetch(:show_button, true)
+  end
+
+  def no_include_jquery?
+    fetch(:no_include_jquery, false)
+  end
 end
