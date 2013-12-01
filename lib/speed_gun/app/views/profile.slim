@@ -42,4 +42,6 @@ html
             ul.backtrace
               - profile.backtrace.each do |backtrace|
                 li= backtrace
+              - if profile.backtrace.empty?
+                li No Backtraces
         - last_profile_id = profile.id

@@ -82,7 +82,13 @@ class SpeedGun::Profiler::Base
   end
 
   def profile(*args, &block)
-    @backtrace = caller(3)
+    @backtrace = caller(3).map { |backtrace|
+      backtrace.sub(SpeedGun.config.backtrace_remove, '')
+    }.reject { |backtrace|
+      !SpeedGun.config.backtrace_includes.any? { |regexp|
+        backtrace =~ regexp
+      }
+    }
     parent_profile = SpeedGun.current.now_profile
     SpeedGun.current.now_profile = self
     before_profile(*args, &block) if respond_to?(:before_profile)

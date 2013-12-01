@@ -6,6 +6,8 @@ class SpeedGun::Railtie < ::Rails::Railtie
     app.middleware.insert(0, SpeedGun::Middleware)
 
     SpeedGun.config[:enable_on] = lambda { Rails.env.development? }
+    SpeedGun.config[:backtrace_remove] = Rails.root.to_s + '/'
+    SpeedGun.config[:backtrace_includes] = [/^(app|config|lib|test|spec)/]
 
     ActiveSupport.on_load(:action_controller) do
       require 'speed_gun/profiler/action_controller'

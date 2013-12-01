@@ -28,4 +28,12 @@ class SpeedGun::Config < Hash
   def auto_inject?
     fetch(:auto_inject, true)
   end
+
+  def backtrace_remove
+    self[:backtrace_remove] ||= ""
+  end
+
+  def backtrace_includes
+    self[:backtrace_includes] ||= [//]
+  end
 end
