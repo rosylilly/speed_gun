@@ -39,7 +39,7 @@ class SpeedGun::Profiler
     @profiles = []
     @active = true
   end
-  attr_reader :id, :total, :profiles
+  attr_reader :id, :path, :query, :env, :requested_at, :total, :profiles
 
   def profile(type, *args, &block)
     profiler = PROFILERS[type]

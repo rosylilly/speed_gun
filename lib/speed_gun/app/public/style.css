@@ -1,0 +1,90 @@
+body {
+  position: relative;
+  margin: 0 auto;
+  padding-top: 100px;
+  width: 960px;
+  background-color: #efefef;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  z-index: 3;
+}
+
+#header h1, #header dl {
+  margin: 0 auto;
+  width: 960px;
+}
+
+#header h1 {
+  margin-bottom: 0.5em;
+  padding: 0;
+  font-size: 24px;
+  line-height: 1;
+}
+
+#header h1 img {
+  vertical-align: top;
+  margin-right: 6px;
+}
+
+#header dl {
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+#header dt, #header dd {
+  display: inline;
+  padding: 3px 5px;
+  box-shadow: 0 1px 1px #ddd;
+}
+
+#header dt {
+  background-color: #eee;
+}
+
+#header dd {
+  margin: 0 1em 0 0;
+  background-color: #fff;
+}
+
+.profile {
+  position: relative;
+  margin: 5px 0;
+  padding: 5px 10px;
+  box-shadow: 0 1px 1px #ddd;
+  background-color: #fff;
+  border-left: 5px solid;
+  font-size: 12px;
+}
+
+.profile h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+}
+
+.profile .elapsed-time {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 5px 10px;
+  font-size: 100%;
+  background-color: #ecf0f1;
+  width: 7em;
+  text-align: right;
+}
+
+.profile { border-color: #95a5a6; }
+.profile.type-rack { border-color: #c0392b; }
+.profile.type-active_record { border-color: #3498db; }
+.profile.type-action_controller { border-color: #f1c40f; }
+.profile.type-action_view { border-color: #2ecc71; }

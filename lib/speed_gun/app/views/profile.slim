@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    meta charset="UTF-8"
+    title Speed Gun: #{@profiler.path}
+    link(rel="stylesheet" href="#{SpeedGun.config.prefix}/style.css")
+  body
+
+    #header
+      h1
+        img(src="#{SpeedGun.config.prefix}/clock.png" height="24")
+        | #{@profiler.path}?#{@profiler.query}
+      dl
+        dt Request ID
+        dd= @profiler.id
+        dt Requested At
+        dd= @profiler.requested_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    div#profiles
+      - @profiler.profiles.each do |profile|
+        div.profile(class="type-#{profile.type}")
+          h2 #{profile.label}: #{profile.title}
+          p.elapsed-time
+            = sprintf("%0.2f", BigDecimal("#{profile.elapsed_time * 1000}").floor(2))
+            | ms

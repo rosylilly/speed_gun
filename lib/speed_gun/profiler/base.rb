@@ -8,7 +8,7 @@ class SpeedGun::Profiler::Base
   def self.profiler_type
     self.name\
       .sub(/.*::/, '')\
-      .gsub(/.([A-Z])/) { |m| "_#{$1.downcase}" }\
+      .gsub(/(.)([A-Z])/) { |m| "#{$1}_#{$2.downcase}" }\
       .downcase\
       .to_sym
   end
@@ -59,9 +59,18 @@ class SpeedGun::Profiler::Base
   def initialize
     @elapsed_time = 0
   end
+  attr_reader :elapsed_time
 
   def title
     warn "Override this method"
+  end
+
+  def label
+    self.class.label
+  end
+
+  def type
+    self.class.profiler_type
   end
 
   def profile(*args, &block)
@@ -78,8 +87,8 @@ class SpeedGun::Profiler::Base
     instance_variables.each do |key|
       hash[key.to_s.sub(/^\@/, '')] = instance_variable_get(key)
     end
-    hash['type'] = self.class.profiler_type.to_s
-    hash['label'] = self.class.label
+    hash['type'] = type.to_s
+    hash['label'] = label
     hash['title'] = title
     hash
   end
