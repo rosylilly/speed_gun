@@ -37,11 +37,12 @@ class SpeedGun::Profiler
     @requested_at = Time.now
     @total = 0
     @profiles = []
+    @client_info = {}
     @active = true
     @now_profile = nil
   end
   attr_reader :id, :path, :query, :env, :requested_at, :total, :profiles
-  attr_accessor :now_profile
+  attr_accessor :now_profile, :client_info
 
   def profile(type, *args, &block)
     profiler = PROFILERS[type]
@@ -78,6 +79,7 @@ class SpeedGun::Profiler
       env: msgpackable_env,
       requested_at: @requested_at.to_i,
       profiles: @profiles.map { |profile| profile.as_msgpack(*args) },
+      client_info: @client_info,
     }
   end
 

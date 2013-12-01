@@ -2,6 +2,7 @@ body {
   position: relative;
   margin: 0 auto;
   padding-top: 100px;
+  padding-bottom: 50px;
   width: 960px;
   background-color: #efefef;
   font-family: monospace;
@@ -56,14 +57,69 @@ dd {
   background-color: #fff;
 }
 
-.profile {
+#timeline-view {
+  position: relative;
+  margin: 20px 0;
+  height: 40px;
+  background-color: #34495e;
+}
+
+#timeline-view .time, #timeline-view .label {
+  position: absolute;
+}
+
+#timeline-view .time {
+  margin-left: -2.5px;
+  width: 5px;
+  height: 100%;
+  background-color: #3498db;
+}
+
+#timeline-view .label {
+  display: none;
+  padding: 2px 5px;
+  width: 100px;
+  background-color: #fff;
+  z-index: 2;
+}
+
+#timeline-view .label.left {
+  left: 3px;
+  text-align: left;
+}
+
+#timeline-view .label.right {
+  right: 3px;
+  text-align: right;
+}
+
+#timeline-view .time:hover .label {
+  display: block;
+}
+
+#rack-envs ul {
+  margin: 0;
+  padding: 0;
+}
+
+#rack-envs .env-key {
+  margin-right: 1em;
+  color: #27ae60;
+}
+
+.profile, .env, .client-info {
   position: relative;
   margin: 5px 0;
   padding: 5px 10px;
   box-shadow: 0 1px 1px #ddd;
   background-color: #fff;
-  border-left: 5px solid;
   font-size: 12px;
+  list-style: none outside;
+  word-wrap:break-word;
+}
+
+.profile {
+  border-left: 5px solid;
 }
 
 .profile { border-color: #95a5a6; }
@@ -72,14 +128,14 @@ dd {
 .profile.type-action_controller { border-color: #f1c40f; }
 .profile.type-action_view { border-color: #2ecc71; }
 
-.profile h2 {
+.profile h3, .client-info h3 {
   margin: 0;
   padding: 0;
   font-size: 100%;
   cursor: pointer;
 }
 
-.profile .elapsed-time {
+.elapsed-time {
   position: absolute;
   top: 0;
   right: 0;

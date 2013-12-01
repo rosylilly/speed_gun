@@ -1,7 +1,9 @@
-#speed_gun_button(style="position: fixed; bottom: 10px; right: 10px;")
-  a#toggle_speed_gun(href="#{File.join(SpeedGun.config.prefix, 'profile', SpeedGun.current.id)}" target="_blank" style="display: block; padding: 5px 10px; font-size: 12px; height: 30px; line-height: 30px;  box-shadow: 0 0 2px #333; background-color: #fff; color: #333; text-decoration: none; border-radius: 30px;")
-    img(style="vertical-align: middle; margin-right: 10px;" src="#{SpeedGun.config.prefix}/clock.png" width="30" height="30")
-    span#speed_gun_total(style="margin-right: 10px; vertical-align: middle;")
-      = sprintf("%0.2f", BigDecimal("#{SpeedGun.current.total * 1000}").floor(2))
-      | ms
-
+#speed_gun(data-speed-gun-endpoint="#{SpeedGun.config.prefix}/profile/#{SpeedGun.current.id}/client_info")
+  #speed_gun_button(style="position: fixed; bottom: 10px; right: 10px;")
+    a#toggle_speed_gun(href="#{File.join(SpeedGun.config.prefix, 'profile', SpeedGun.current.id)}" target="_blank" style="display: block; padding: 5px 10px; font-size: 12px; height: 30px; line-height: 30px;  box-shadow: 0 0 2px #333; background-color: #fff; color: #333; text-decoration: none; border-radius: 30px;")
+      img(style="vertical-align: middle; margin-right: 10px;" src="#{SpeedGun.config.prefix}/clock.png" width="30" height="30")
+      span#speed_gun_total(style="margin-right: 10px; vertical-align: middle;")
+        = sprintf("%0.2f", BigDecimal("#{SpeedGun.current.total * 1000}").floor(2))
+        | ms
+  script(type="text/javascript" src="#{SpeedGun.config.prefix}/jquery-1.10.2.min.js")
+  script(type="text/javascript" src="#{SpeedGun.config.prefix}/timings.js")
