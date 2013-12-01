@@ -95,7 +95,15 @@ dd {
   display: none;
 }
 
-pre {
+.profile .backtrace {
   margin: 10px 0;
-  font-family: monospace;
+  padding: 0;
+  list-style: none outside;
+}
+
+pre {
+  margin: 20px 0;
+  padding: 20px;
+  font-family: Courier, monospace;
+  background-color: #ecf0f1;
 }
