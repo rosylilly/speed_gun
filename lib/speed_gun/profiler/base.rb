@@ -1,4 +1,5 @@
 require 'speed_gun/profiler'
+require 'securerandom'
 
 class SpeedGun::Profiler::Base
   def self.label
@@ -57,12 +58,19 @@ class SpeedGun::Profiler::Base
   end
 
   def initialize
+    @id = SecureRandom.uuid
+    @parent_profile_id = nil
     @elapsed_time = 0
+    @backtrace = []
   end
-  attr_reader :elapsed_time
+  attr_reader :id, :elapsed_time, :parent_profile_id, :backtrace
 
   def title
     warn "Override this method"
+  end
+
+  def html
+    ""
   end
 
   def label
@@ -74,18 +82,26 @@ class SpeedGun::Profiler::Base
   end
 
   def profile(*args, &block)
+    @backtrace = caller(3)
+    parent_profile = SpeedGun.current.now_profile
+    SpeedGun.current.now_profile = self
     before_profile(*args, &block) if respond_to?(:before_profile)
     now = Time.now
     result = yield
     @elapsed_time = Time.now - now
     after_profile(*args, &block) if respond_to?(:after_profile)
     return result
+  ensure
+    SpeedGun.current.now_profile = parent_profile
+    @parent_profile_id = parent_profile.id if parent_profile
   end
 
   def as_msgpack(*args)
     hash = {}
     instance_variables.each do |key|
-      hash[key.to_s.sub(/^\@/, '')] = instance_variable_get(key)
+      unless key.to_s =~ /^\@_/
+        hash[key.to_s.sub(/^\@/, '')] = instance_variable_get(key)
+      end
     end
     hash['type'] = type.to_s
     hash['label'] = label

@@ -4,6 +4,8 @@ html
     meta charset="UTF-8"
     title Speed Gun: #{@profiler.path}
     link(rel="stylesheet" href="#{SpeedGun.config.prefix}/style.css")
+    script(type="text/javascript" src="#{SpeedGun.config.prefix}/jquery-1.10.2.min.js")
+    script(type="text/javascript" src="#{SpeedGun.config.prefix}/profile.js")
   body
 
     #header
@@ -17,9 +19,27 @@ html
         dd= @profiler.requested_at.strftime("%Y-%m-%d %H:%M:%S")
 
     div#profiles
+      - last_profile_id = nil
+      - profile_nest = []
       - @profiler.profiles.each do |profile|
-        div.profile(class="type-#{profile.type}")
-          h2 #{profile.label}: #{profile.title}
+        - if last_profile_id && profile.parent_profile_id == last_profile_id
+          - profile_nest.push(last_profile_id)
+        - while profile.parent_profile_id != profile_nest.last
+          - profile_nest.pop
+        div.profile(class="type-#{profile.type}" style="margin-left: #{profile_nest.length * 10}px;")
           p.elapsed-time
             = sprintf("%0.2f", BigDecimal("#{profile.elapsed_time * 1000}").floor(2))
             | ms
+          h2 #{profile.label}: #{profile.title}
+          .more
+            dl
+              dt Profile ID
+              dd= profile.id
+              - if profile.parent_profile_id
+                dt Parent Profile ID
+                dd= profile.parent_profile_id
+            == profile.html
+            ul.backtrace
+              - profile.backtrace.each do |backtrace|
+                li= backtrace
+        - last_profile_id = profile.id
