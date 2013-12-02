@@ -39,13 +39,12 @@ class SpeedGun::Profiler
     @query = env['QUERY_STRING']
     @env = env
     @requested_at = Time.now
-    @total = 0
     @profiles = []
     @browser = nil
     @active = true
     @now_profile = nil
   end
-  attr_reader :id, :path, :query, :env, :requested_at, :total, :profiles, :browser
+  attr_reader :id, :path, :query, :env, :requested_at, :profiles, :browser
   attr_accessor :now_profile
 
   def profile(type, *args, &block)
@@ -75,7 +74,6 @@ class SpeedGun::Profiler
   end
 
   def dump
-    @total = Time.now - @requested_at
     SpeedGun.store[id] = to_msgpack
 
     SpeedGun::Hook.invoke_all(self)
