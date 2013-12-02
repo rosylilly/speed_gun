@@ -108,7 +108,7 @@ dd {
   background-color: #fff;
   font-size: 12px;
   list-style: none outside;
-  word-wrap:break-word;
+  word-wrap: break-word;
 }
 
 .profile {
@@ -147,6 +147,14 @@ dd {
   border-top: 1px solid #ecf0f1;
 }
 
+.profile.type-js_profiler .backtrace li {
+  white-space: pre;
+  margin: 0 -10px 10px -10px;
+  padding:  0 10px 10px 10px;
+  border-bottom: 1px solid #ecf0f1;
+  overflow: auto;
+}
+
 .more {
   display: none;
 }
@@ -156,4 +164,5 @@ pre {
   padding: 20px;
   font-family: Courier, monospace;
   background-color: #ecf0f1;
+  overflow: auto;
 }

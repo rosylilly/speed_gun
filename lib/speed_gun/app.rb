@@ -21,7 +21,8 @@ class SpeedGun::App < Sinatra::Base
         SpeedGun::Profiler::JsProfiler.profile(
           @profiler,
           params[:js]['title'] || '',
-          params[:js]['elapsed_time'] || 0
+          params[:js]['elapsed_time'] || 0,
+          params[:js]['backtrace'] || []
         )
       end
 
