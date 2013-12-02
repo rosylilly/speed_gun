@@ -37,8 +37,12 @@ module SpeedGun
     config.store
   end
 
-  def self.profile(title, &block)
-    current && current.profile(:manual, title, &block)
+  def self.profile(title, *args, &block)
+    if title.kind_of?(String)
+      current && current.profile(:manual, title, &block)
+    else
+      current && current.profile(title, *args, &block)
+    end
   end
 end
 
