@@ -70,6 +70,11 @@ var object = { func: function() { ... codes ... } };
 speedGun.profileMethod(object, "func", "any title");
 ```
 
+And SpeedGun collect browser informations.
+
+- User Agent
+- Perfomance API(if implemented)
+
 ### Custom Profiler
 
 You can create your custom profilers. a custom profiler require `title` method.
