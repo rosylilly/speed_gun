@@ -1,5 +1,5 @@
 require 'speed_gun'
-require 'speed_gun/middleware'
+require 'speed_gun/store/file'
 
 class SpeedGun::Railtie < ::Rails::Railtie
   initializer 'speed_gun' do |app|
@@ -10,6 +10,8 @@ class SpeedGun::Railtie < ::Rails::Railtie
     SpeedGun.config[:backtrace_includes] = [/^(app|config|lib|test|spec)/]
     SpeedGun.config[:authorize_proc] = ->(request) { Rails.env.development? }
     SpeedGun.config.skip_paths << /^#{Regexp.escape(app.config.assets.prefix)}/
+    SpeedGun.config[:store] =
+      SpeedGun::Store::File.new(path: Rails.root.join('tmp/speed_gun'))
 
     ActiveSupport.on_load(:action_controller) do
       require 'speed_gun/profiler/action_controller'

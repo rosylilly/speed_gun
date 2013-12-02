@@ -28,8 +28,10 @@ class SpeedGun::Middleware
 
     status, headers, body = *SpeedGun.current.profile(:rack) { @app.call(env) }
 
-    inject_header(headers)
-    SpeedGun.current.dump
+    if SpeedGun.active?
+      inject_header(headers)
+      SpeedGun.current.dump
+    end
 
     if SpeedGun.config.auto_inject? && SpeedGun.active?
       inject_body(status, headers, body)
@@ -46,8 +48,6 @@ class SpeedGun::Middleware
   end
 
   def inject_header(headers)
-    return unless SpeedGun.active?
-
     if SpeedGun.config.force_profile?
       headers.delete('ETag')
       headers.delete('Date')

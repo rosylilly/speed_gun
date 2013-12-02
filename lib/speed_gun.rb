@@ -48,4 +48,5 @@ end
 
 require 'speed_gun/version'
 require 'speed_gun/config'
+require 'speed_gun/middleware'
 require 'speed_gun/railtie' if defined?(Rails)
