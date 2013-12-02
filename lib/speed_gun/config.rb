@@ -34,7 +34,7 @@ class SpeedGun::Config < Hash
   end
 
   def backtrace_includes
-    self[:backtrace_includes] ||= [//]
+    self[:backtrace_includes] ||= []
   end
 
   def show_button?
@@ -43,5 +43,9 @@ class SpeedGun::Config < Hash
 
   def no_include_jquery?
     fetch(:no_include_jquery, false)
+  end
+
+  def skip_paths
+    self[:skip_paths] ||= [/favicon/]
   end
 end

@@ -13,13 +13,13 @@ class SpeedGun::App < Sinatra::Base
     "SpeedGun v#{SpeedGun::VERSION}"
   end
 
-  post '/profile/:id/client_info' do
+  post '/profile/:id' do
     @profiler = SpeedGun::Profiler.load(params[:id])
 
-    halt 404 unless @profiler
-
-    @profiler.client_info = params[:client_info]
-    @profiler.dump
+    if @profiler && @profiler.client_info.empty?
+      @profiler.client_info = params[:client_info]
+      @profiler.dump
+    end
 
     [200, {}, '']
   end

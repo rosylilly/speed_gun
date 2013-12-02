@@ -8,6 +8,7 @@ class SpeedGun::Railtie < ::Rails::Railtie
     SpeedGun.config[:enable_on] = lambda { Rails.env.development? }
     SpeedGun.config[:backtrace_remove] = Rails.root.to_s + '/'
     SpeedGun.config[:backtrace_includes] = [/^(app|config|lib|test|spec)/]
+    SpeedGun.config.skip_paths << /^#{Regexp.escape(app.config.assets.prefix)}/
 
     ActiveSupport.on_load(:action_controller) do
       require 'speed_gun/profiler/action_controller'

@@ -14,7 +14,7 @@ class SpeedGun::Middleware
 
     SpeedGun.current = SpeedGun::Profiler.new(env) if SpeedGun.enable?
 
-    return @app.call unless SpeedGun.active?
+    return @app.call(env) unless SpeedGun.active?
 
     status, headers, body = *SpeedGun.current.profile(:rack) { @app.call(env) }
 
@@ -35,9 +35,6 @@ class SpeedGun::Middleware
   def inject_header(headers)
     return unless SpeedGun.active?
 
-    headers.delete('ETag')
-    headers.delete('Date')
-    headers['Cache-Control'] = 'must-revalidate, private, max-age=0'
     headers['X-SPEEDGUN-ID'] = SpeedGun.current.id
   end
 

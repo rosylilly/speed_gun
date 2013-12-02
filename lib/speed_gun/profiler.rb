@@ -54,8 +54,12 @@ class SpeedGun::Profiler
     end
   end
 
+  def skip?
+    SpeedGun.config.skip_paths.any? { |prefix| prefix === @path }
+  end
+
   def active?
-    @active
+    @active && !skip?
   end
 
   def activate!
