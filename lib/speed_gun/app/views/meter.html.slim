@@ -1,9 +1,8 @@
 #speed_gun(data-speed-gun-endpoint="#{SpeedGun.config.prefix}/profile" data-speed-gun-id="#{SpeedGun.current.id}" data-rack-ms="#{SpeedGun.current.profiles.first.elapsed_time * 1000}")
   - if SpeedGun.config.show_button?
     #speed_gun_button(style="position: fixed; bottom: 10px; right: 10px;")
-      a#toggle_speed_gun(href="#{File.join(SpeedGun.config.prefix, 'profile', SpeedGun.current.id)}" target="_blank" style="display: block; padding: 5px 10px; font-size: 12px; height: 30px; line-height: 30px;  box-shadow: 0 0 2px #333; background-color: #fff; color: #333; text-decoration: none; border-radius: 30px;")
-        img(style="vertical-align: middle; margin-right: 10px;" src="#{SpeedGun.config.prefix}/clock.png" width="30" height="30")
-        span#speed_gun_total(style="margin-right: 10px; vertical-align: middle;")
+      a#toggle_speed_gun(href="#{File.join(SpeedGun.config.prefix, 'profile', SpeedGun.current.id)}" target="_blank" style="display: block; padding: 2px 5px; font-size: 9px; line-height: 2;  box-shadow: 0 0 2px #333; background-color: #fff; color: #333; text-decoration: none; border-radius: 3px;")
+        span#speed_gun_total(style="vertical-align: middle;")
   - unless SpeedGun.config.no_include_jquery?
     script(type="text/javascript" src="#{SpeedGun.config.prefix}/jquery-1.10.2.min.js")
   script(type="text/javascript" src="#{SpeedGun.config.prefix}/browser.js")
