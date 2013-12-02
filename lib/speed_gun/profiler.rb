@@ -2,7 +2,6 @@ require 'speed_gun'
 require 'speed_gun/store'
 require 'speed_gun/browser'
 require 'speed_gun/hook'
-require 'speed_gun/profiler/manual_profiler'
 require 'securerandom'
 require 'msgpack'
 require 'multi_json'
@@ -120,3 +119,6 @@ class SpeedGun::Profiler
     env
   end
 end
+
+require 'speed_gun/profiler/manual_profiler'
+require 'speed_gun/profiler/js_profiler'

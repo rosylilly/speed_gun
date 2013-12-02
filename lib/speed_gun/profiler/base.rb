@@ -38,7 +38,6 @@ class SpeedGun::Profiler::Base
   end
 
   def self.load(data)
-    data.delete('title')
     data.delete('label')
     type = data.delete('type')
     profiler = SpeedGun::Profiler::PROFILERS[type.to_sym]

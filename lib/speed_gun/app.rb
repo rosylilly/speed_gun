@@ -12,8 +12,19 @@ class SpeedGun::App < Sinatra::Base
   post '/profile/:id' do
     @profiler = SpeedGun::Profiler.load(params[:id])
 
-    if @profiler && @profiler.browser.nil?
-      @profiler.browser = params[:browser]
+    if @profiler
+      if @profiler.browser.nil? && params[:browser]
+        @profiler.browser = params[:browser]
+      end
+
+      if params[:js]
+        SpeedGun::Profiler::JsProfiler.profile(
+          @profiler,
+          params[:js]['title'] || '',
+          params[:js]['elapsed_time'] || 0
+        )
+      end
+
       @profiler.dump
     end
 
