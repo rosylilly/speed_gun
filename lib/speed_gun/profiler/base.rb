@@ -3,11 +3,11 @@ require 'securerandom'
 
 class SpeedGun::Profiler::Base
   def self.label
-    self.name.sub(/.*::/, '')
+    name.sub(/.*::/, '')
   end
 
   def self.profiler_type
-    self.name\
+    name\
       .sub(/.*::/, '')\
       .gsub(/(.)([A-Z])/) { |m| "#{$1}_#{$2.downcase}" }\
       .downcase\
@@ -24,7 +24,7 @@ class SpeedGun::Profiler::Base
     return unless klass.send(:method_defined?, method_name)
     return if klass.send(:method_defined?, with_profiling)
 
-    profiler = self.profiler_type
+    profiler = profiler_type
     klass.send(:alias_method, without_profiling, method_name)
     klass.send(:define_method, with_profiling) do |*args, &block|
       return send(without_profiling, *args, &block) unless SpeedGun.current
@@ -66,11 +66,11 @@ class SpeedGun::Profiler::Base
   attr_reader :id, :elapsed_time, :parent_profile_id, :backtrace
 
   def title
-    warn "Override this method"
+    warn 'Override this method'
   end
 
   def html
-    ""
+    ''
   end
 
   def label
@@ -82,24 +82,24 @@ class SpeedGun::Profiler::Base
   end
 
   def profile(*args, &block)
-    @backtrace = caller(3).map { |backtrace|
-      backtrace.sub(SpeedGun.config.backtrace_remove, '')
-    }.reject { |backtrace|
-      !SpeedGun.config.backtrace_includes.any? { |regexp|
-        backtrace =~ regexp
-      }
-    }
+    @backtrace = cleanup_caller(caller(3))
     parent_profile = SpeedGun.current.now_profile
     SpeedGun.current.now_profile = self
-    before_profile(*args, &block) if respond_to?(:before_profile)
-    now = Time.now
-    result = yield
-    @elapsed_time = Time.now - now
-    after_profile(*args, &block) if respond_to?(:after_profile)
+    call_without_defined(:before_profile, *args, &block)
+    result = measure(&block)
+    call_without_defined(:after_profile, *args, &block)
     return result
   ensure
     SpeedGun.current.now_profile = parent_profile
     @parent_profile_id = parent_profile.id if parent_profile
+  end
+
+  def measure(&block)
+    now = Time.now
+    result = yield
+    @elapsed_time = Time.now - now
+
+    result
   end
 
   def as_msgpack(*args)
@@ -117,5 +117,24 @@ class SpeedGun::Profiler::Base
 
   def to_msgpack(*args)
     as_msgpack(*args).to_msgpack(*args)
+  end
+
+  private
+
+  def call_without_defined(method, *args)
+    send(method, *args) if respond_to?(method)
+  end
+
+  def cleanup_caller(caller)
+    backtraces = caller.map do |backtrace|
+      backtrace.sub(SpeedGun.config.backtrace_remove, '')
+    end
+    backtraces.reject! do |backtrace|
+      !SpeedGun.config.backtrace_includes.any? do |regexp|
+        backtrace =~ regexp
+      end
+    end
+
+    backtraces
   end
 end

@@ -18,18 +18,7 @@ class SpeedGun::Profiler
     data = MessagePack.unpack(src)
 
     profiler = new({})
-
-    data.each_pair do |key, val|
-      case key
-      when 'requested_at'
-        val = Time.at(val)
-      when 'profiles'
-        val = val.map { |profile| SpeedGun::Profiler::Base.load(profile) }
-      when 'browser'
-        val = val ? SpeedGun::Browser.new(val) : val
-      end
-      profiler.send(:instance_variable_set, :"@#{key}", val)
-    end
+    profiler.restore_by_hash(data)
 
     profiler
   end
@@ -59,7 +48,7 @@ class SpeedGun::Profiler
   end
 
   def skip?
-    SpeedGun.config.skip_paths.any? { |prefix| prefix === @path }
+    SpeedGun.config.skip_paths.any? { |prefix| prefix.match(@path) }
   end
 
   def active?
@@ -104,15 +93,30 @@ class SpeedGun::Profiler
     MultiJson.dump(as_msgpack(*args))
   end
 
+  def restore_by_hash(hash)
+    hash.each_pair do |key, val|
+      instance_variable_set(:"@#{key}", restore_attribute(key, val))
+    end
+  end
+
+  def restore_attribute(key, val)
+    case key
+    when 'requested_at'
+      Time.at(val)
+    when 'profiles'
+      val.map { |profile| SpeedGun::Profiler::Base.load(profile) }
+    when 'browser'
+      val ? SpeedGun::Browser.new(val) : val
+    else
+      val
+    end
+  end
+
   private
 
   def msgpackable_env
     env = {}
-    @env.each_pair do |key, val|
-      if key[0] =~ /[A-Z]/
-        env[key] = val
-      end
-    end
+    @env.each_pair { |key, val| env[key] = val if key[0] =~ /[A-Z]/ }
     env
   end
 end

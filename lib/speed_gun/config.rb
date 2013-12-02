@@ -10,7 +10,7 @@ class SpeedGun::Config < Hash
   end
 
   def enable_if
-    self[:enable_if] ||= lambda { true }
+    self[:enable_if] ||= -> { true }
   end
 
   def prefix
@@ -30,7 +30,7 @@ class SpeedGun::Config < Hash
   end
 
   def backtrace_remove
-    self[:backtrace_remove] ||= ""
+    self[:backtrace_remove] ||= ''
   end
 
   def backtrace_includes
@@ -54,6 +54,6 @@ class SpeedGun::Config < Hash
   end
 
   def authorize_proc
-    self[:authorize_proc] ||= lambda { |request| true }
+    self[:authorize_proc] ||= ->(request) { true }
   end
 end

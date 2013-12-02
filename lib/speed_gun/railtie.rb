@@ -5,7 +5,7 @@ class SpeedGun::Railtie < ::Rails::Railtie
   initializer 'speed_gun' do |app|
     app.middleware.insert(0, SpeedGun::Middleware)
 
-    SpeedGun.config[:enable_on] = lambda { Rails.env.development? }
+    SpeedGun.config[:enable_on] = -> { Rails.env.development? }
     SpeedGun.config[:backtrace_remove] = Rails.root.to_s + '/'
     SpeedGun.config[:backtrace_includes] = [/^(app|config|lib|test|spec)/]
     SpeedGun.config.skip_paths << /^#{Regexp.escape(app.config.assets.prefix)}/

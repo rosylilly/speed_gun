@@ -1,6 +1,10 @@
 require 'thread'
 
 module SpeedGun
+  class << self
+    attr_writer :config
+  end
+
   def self.current
     Thread.current[:speed_gun_current]
   end
@@ -11,10 +15,6 @@ module SpeedGun
 
   def self.config
     @config ||= SpeedGun::Config.new
-  end
-
-  def self.config=(config)
-    @config = config
   end
 
   def self.active?
@@ -44,7 +44,4 @@ end
 
 require 'speed_gun/version'
 require 'speed_gun/config'
-
-if defined?(Rails)
-  require 'speed_gun/railtie'
-end
+require 'speed_gun/railtie' if defined?(Rails)

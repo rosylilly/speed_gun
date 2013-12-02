@@ -17,8 +17,6 @@ class SpeedGun::Store::Memory < SpeedGun::Store::Base
     @store[id] = val
     @stored_list.push(id)
 
-    while @stored_list.length > @max_entries
-      @store.delete(@stored_list.shift)
-    end
+    @store.delete(@stored_list.shift) while @stored_list.length > @max_entries
   end
 end

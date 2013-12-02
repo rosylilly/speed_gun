@@ -5,7 +5,10 @@ class SpeedGun::Profiler::ManualProfiler < SpeedGun::Profiler::Base
     'Manual'
   end
 
-  def before_profile(title)
+  attr_reader :html
+
+  def before_profile(title, html = '')
     @title = title
+    @html = html
   end
 end

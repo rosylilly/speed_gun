@@ -5,6 +5,8 @@ require 'speed_gun/profiler/rack'
 require 'speed_gun/template'
 
 class SpeedGun::Middleware
+  BODY_END_REGEXP = /<\/(?:body|html)>/
+
   def initialize(app)
     @app = app
   end
@@ -14,9 +16,19 @@ class SpeedGun::Middleware
 
     SpeedGun.current = SpeedGun::Profiler.new(env) if SpeedGun.enable?
 
-    return @app.call(env) unless SpeedGun.active?
+    if SpeedGun.active?
+      call_with_speed_gun(env)
+    else
+      @app.call(env)
+    end
+  ensure
+    SpeedGun.current = nil
+  end
 
-    remove_conditional_get_headers(env) if SpeedGun.config.force_profile?
+  private
+
+  def call_with_speed_gun(env)
+    remove_conditional_get_headers(env)
 
     status, headers, body = *SpeedGun.current.profile(:rack) { @app.call(env) }
 
@@ -28,13 +40,11 @@ class SpeedGun::Middleware
     else
       return [status, headers, body]
     end
-  ensure
-    SpeedGun.current = nil
   end
 
-  private
-
   def remove_conditional_get_headers(env)
+    return unless SpeedGun.config.force_profile?
+
     env['HTTP_IF_MODIFIED_SINCE'] = ''
     env['HTTP_IF_NONE_MATCH'] = ''
   end
@@ -58,20 +68,17 @@ class SpeedGun::Middleware
 
     response = Rack::Response.new([], status, headers)
 
-    if body.kind_of?(String)
-      response.write(inject_meter(body))
-    else
-      body.each { |fragment| response.write(inject_meter(fragment)) }
-    end
+    body = [body] if body.kind_of?(String)
+    body.each { |fragment| response.write(inject_fragment(fragment)) }
     body.close if body.respond_to?(:close)
 
     response.finish
   end
 
-  def inject_meter(body)
-    return body unless body.match(%r{</(?:body|html)>})
+  def inject_fragment(body)
+    return body unless body.match(BODY_END_REGEXP)
 
-    body.sub(%r{</(?:body|html)>}) do |matched|
+    body.sub(BODY_END_REGEXP) do |matched|
       SpeedGun::Template.render + matched
     end
   end

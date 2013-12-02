@@ -1,6 +1,7 @@
 require 'speed_gun/browser'
 
 class SpeedGun::Browser::Timing < Hash
+  # rubocop:disable SymbolName
   ATTRIBUTES = [
     :navigationStart,
     :unloadEventStart,
@@ -24,6 +25,7 @@ class SpeedGun::Browser::Timing < Hash
     :loadEventStart,
     :loadEventEnd,
   ]
+  # rubocop:enable all
 
   class Timing
     def initialize(name, base, started_at, ended_at)
@@ -48,11 +50,15 @@ class SpeedGun::Browser::Timing < Hash
     loadEventEnd - navigationStart
   end
 
+  # rubocop:disable MethodLength
   def timings
     @timings ||= [
-      (redirectStart > 0 ?
-       Timing.new('Redirect', navigationStart, redirectStart, redirectEnd) :
-       nil
+      (
+        if redirectStart > 0
+          Timing.new('Redirect', navigationStart, redirectStart, redirectEnd)
+        else
+          nil
+        end
       ),
       Timing.new('Fetch all', navigationStart, fetchStart, responseEnd),
       Timing.new(
@@ -61,9 +67,12 @@ class SpeedGun::Browser::Timing < Hash
       Timing.new(
         'TCP Connecting', navigationStart, connectStart, connectEnd
       ),
-      (secureConnectionStart > 0 ?
-        Timing.new('SSL', navigationStart, secureConnectionStart, connectEnd) :
-        nil
+      (
+        if secureConnectionStart > 0
+          Timing.new('SSL', navigationStart, secureConnectionStart, connectEnd)
+        else
+          nil
+        end
       ),
       Timing.new('Request', navigationStart, requestStart, responseStart),
       Timing.new('Response', navigationStart, responseStart, responseEnd),
@@ -79,4 +88,5 @@ class SpeedGun::Browser::Timing < Hash
       Timing.new('Load Event', navigationStart, loadEventStart, loadEventEnd),
     ].reject { |timing| timing.nil? }
   end
+  # rubocop:enable
 end
