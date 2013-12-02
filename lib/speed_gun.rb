@@ -21,12 +21,24 @@ module SpeedGun
     current && current.active?
   end
 
+  def self.activate!
+    current && current.activate!
+  end
+
+  def self.deactivate!
+    current && current.deactivate!
+  end
+
   def self.enable?
     config.enable?
   end
 
   def self.store
     config.store
+  end
+
+  def self.profile(title, &block)
+    current && current.profile(:manual, title, &block)
   end
 end
 
