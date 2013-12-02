@@ -1,6 +1,6 @@
 # SpeedGun
 
-First, measure. Second, measure.
+First, profile. Second, profile.
 
 SpeedGun is a better web app profiler on Rails and Rack apps.
 
