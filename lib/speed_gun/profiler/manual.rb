@@ -1,6 +1,6 @@
 require 'speed_gun/profiler/base'
 
-class SpeedGun::Profiler::ManualProfiler < SpeedGun::Profiler::Base
+class SpeedGun::Profiler::Manual < SpeedGun::Profiler::Base
   def self.label
     'Manual'
   end

@@ -120,5 +120,5 @@ class SpeedGun::Profiler
   end
 end
 
-require 'speed_gun/profiler/manual_profiler'
-require 'speed_gun/profiler/js_profiler'
+require 'speed_gun/profiler/manual'
+require 'speed_gun/profiler/js'
