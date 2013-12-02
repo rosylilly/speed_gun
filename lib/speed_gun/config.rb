@@ -52,4 +52,8 @@ class SpeedGun::Config < Hash
   def force_profile?
     fetch(:force_profile, true)
   end
+
+  def authorize_proc
+    self[:authorize_proc] ||= lambda { |request| true }
+  end
 end

@@ -21,6 +21,8 @@ class SpeedGun::App < Sinatra::Base
   end
 
   get '/profile/:id.json' do
+    halt 404 unless SpeedGun.config.authorize_proc.call(request)
+
     @profiler = SpeedGun::Profiler.load(params[:id])
     halt 404 unless @profiler
 
@@ -28,6 +30,8 @@ class SpeedGun::App < Sinatra::Base
   end
 
   get '/profile/:id' do
+    halt 404 unless SpeedGun.config.authorize_proc.call(request)
+
     @profiler = SpeedGun::Profiler.load(params[:id])
     halt 404 unless @profiler
 
