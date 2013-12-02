@@ -18,44 +18,6 @@ html
         dt Requested At
         dd= @profiler.requested_at.strftime("%Y-%m-%d %H:%M:%S")
 
-    - unless (@profiler.client_info || {}).empty?
-      div#client-info
-        h2 Browser
-
-        .client-info.navigation
-          h3 Navigation
-          dl
-            dt Type
-            dd
-              = @profiler.client_info['navigation']['type']
-              | (#{['NAVIAGATE', 'RELOAD', 'BACK_OR_FORWARD'][@profiler.client_info['navigation']['type'].to_i] || 'UNKNOWN'})
-            dt Redirect Count
-            dd= @profiler.client_info['navigation']['redirect_count']
-
-        .client-info.timeline
-          h3 Timeline
-          - timelines = @profiler.client_info['timeline'].map{|k,v| [k, v.to_i] }.sort_by {|t| t[1] }.reject {|a| a[1] == 0 }
-          - min = timelines[0][1]
-          - max = (timelines.last[1] - min) * 1.0
-          - timelines.map! {|a| a[1] = (a[1] - min); [a[1], a[0]] }
-          - timelines = timelines.group_by { |a| a[0] }
-          #timeline-view
-            - timelines.each_pair do |t, tm|
-              .time(style="left: #{((t / max) * 100).to_i}%")
-                .label(class="#{(t / max) > 0.5 ? 'right' : 'left'}")
-                  = "#{tm.map(&:last).join(', ')} (#{t}ms)"
-
-        .client-info.process
-          - timings = @profiler.client_info['timing'].map {|k,v| [k.to_i, v] }.sort_by {|a| a[0] }.map {|a| a = a[1]; [a.keys.first, a.values.first] }
-          h3 Process Time
-          .elapsed-time
-            = timings[0].last
-            | ms
-          ul
-            - timings.each do |timing|
-              li= "#{timing.first}: #{timing.last}ms"
-
-
     div#rack-envs
       h2 Rack ENVs
       ul

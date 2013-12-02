@@ -24,14 +24,16 @@ class SpeedGun::App < Sinatra::Base
     [200, {}, '']
   end
 
-  get '/profile/:id' do
+  get '/profile/:id.json' do
     @profiler = SpeedGun::Profiler.load(params[:id])
-
     halt 404 unless @profiler
 
-    if params[:format] == 'json'
-      return [200, {'Content-Type' => 'application/json'}, @profiler.to_json]
-    end
+    [200, {'Content-Type' => 'application/json'}, @profiler.to_json]
+  end
+
+  get '/profile/:id' do
+    @profiler = SpeedGun::Profiler.load(params[:id])
+    halt 404 unless @profiler
 
     slim :profile
   end

@@ -16,6 +16,8 @@ class SpeedGun::Middleware
 
     return @app.call(env) unless SpeedGun.active?
 
+    remove_conditional_get_headers(env) if SpeedGun.config.force_profile?
+
     status, headers, body = *SpeedGun.current.profile(:rack) { @app.call(env) }
 
     inject_header(headers)
@@ -32,8 +34,19 @@ class SpeedGun::Middleware
 
   private
 
+  def remove_conditional_get_headers(env)
+    env['HTTP_IF_MODIFIED_SINCE'] = ''
+    env['HTTP_IF_NONE_MATCH'] = ''
+  end
+
   def inject_header(headers)
     return unless SpeedGun.active?
+
+    if SpeedGun.config.force_profile?
+      headers.delete('ETag')
+      headers.delete('Date')
+      headers['Cache-Control'] = 'must-revalidate, private, max-age=0'
+    end
 
     headers['X-SPEEDGUN-ID'] = SpeedGun.current.id
   end

@@ -19,9 +19,9 @@ class SpeedGun::Profiler
 
     data.each_pair do |key, val|
       case key
-      when "requested_at"
+      when 'requested_at'
         val = Time.at(val)
-      when "profiles"
+      when 'profiles'
         val = val.map { |profile| SpeedGun::Profiler::Base.load(profile) }
       when 'browser'
         val = val ? SpeedGun::Browser.new(val) : val

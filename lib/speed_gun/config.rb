@@ -48,4 +48,8 @@ class SpeedGun::Config < Hash
   def skip_paths
     self[:skip_paths] ||= [/favicon/]
   end
+
+  def force_profile?
+    fetch(:force_profile, true)
+  end
 end
