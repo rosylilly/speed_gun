@@ -16,8 +16,8 @@ class SpeedGun::App < Sinatra::Base
   post '/profile/:id' do
     @profiler = SpeedGun::Profiler.load(params[:id])
 
-    if @profiler && @profiler.client_info.empty?
-      @profiler.client_info = params[:client_info]
+    if @profiler && @profiler.browser.nil?
+      @profiler.browser = params[:browser]
       @profiler.dump
     end
 

@@ -1,5 +1,6 @@
 require 'speed_gun'
 require 'speed_gun/store'
+require 'speed_gun/browser'
 require 'securerandom'
 require 'msgpack'
 require 'multi_json'
@@ -22,6 +23,8 @@ class SpeedGun::Profiler
         val = Time.at(val)
       when "profiles"
         val = val.map { |profile| SpeedGun::Profiler::Base.load(profile) }
+      when 'browser'
+        val = val ? SpeedGun::Browser.new(val) : val
       end
       profiler.send(:instance_variable_set, :"@#{key}", val)
     end
@@ -37,12 +40,12 @@ class SpeedGun::Profiler
     @requested_at = Time.now
     @total = 0
     @profiles = []
-    @client_info = {}
+    @browser = nil
     @active = true
     @now_profile = nil
   end
-  attr_reader :id, :path, :query, :env, :requested_at, :total, :profiles
-  attr_accessor :now_profile, :client_info
+  attr_reader :id, :path, :query, :env, :requested_at, :total, :profiles, :browser
+  attr_accessor :now_profile
 
   def profile(type, *args, &block)
     profiler = PROFILERS[type]
@@ -75,6 +78,10 @@ class SpeedGun::Profiler
     SpeedGun.store[id] = to_msgpack
   end
 
+  def browser=(hash)
+    @browser = SpeedGun::Browser.new(hash)
+  end
+
   def as_msgpack(*args)
     {
       id: @id,
@@ -83,7 +90,7 @@ class SpeedGun::Profiler
       env: msgpackable_env,
       requested_at: @requested_at.to_i,
       profiles: @profiles.map { |profile| profile.as_msgpack(*args) },
-      client_info: @client_info,
+      browser: @browser ? @browser.as_msgpack(*args) : nil,
     }
   end
 
