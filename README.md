@@ -132,6 +132,30 @@ end
 SpeedGun.profile(:force_gc_profiler) { ... }
 ```
 
+## Store
+
+SpeedGun store request informations(profiling, environments and browser infos). You can select store engines.
+
+### Built-in Stores
+
+- `SpeedGun::Store::Memory` (default store engine on rack)
+  - `max_entries` option: Set number of max profile entries(default: 100)
+- `SpeedGun::Store::File` (default store engine on rails)
+  - `path` option: Set stored path(default: `/tmp/speed_gun` or `Rails.root/tmp/speed_gun`)
+  - `expires` option: Set expires in seconds(default: 1 day)
+- `SpeedGun::Store::Memcache` (before `require 'speed_gun/store/memcache'`)
+  - `client` option: Set memcache client instance(default: `Dalli::Clinet.new`)
+  - `prefix` option: Set prefix of your profile key(default: `'speed-gun-'`)
+  - `expires` option: Set expires in seconds(default: 1 day)
+- `SpeedGun::Store::Redis` (before `require 'speed_gun/store/redis'`)
+  - `client` option: Set redis client instance(default: `Redis.new`)
+  - `prefix` option: Set prefix of your profile key(default: `'speed-gun-'`)
+  - `expires` option: Set expires in seconds(default: 1 day)
+
+### Custom Store
+
+SpeedGun's store engines requires `[]` and `[]=` methods.
+
 ## Contributing
 
 Please pull-requests :octocat: <http://github.com/rosylilly/speed_gun>
