@@ -9,6 +9,12 @@ class SpeedGun::App < Sinatra::Base
     set :views, File.join(root_dir, 'views')
   end
 
+  helpers do
+    def h(str)
+      CGI.escapeHTML(str.to_s)
+    end
+  end
+
   post '/profile/:id' do
     @profiler = SpeedGun::Profiler.load(params[:id])
 

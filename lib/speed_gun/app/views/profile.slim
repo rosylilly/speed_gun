@@ -9,7 +9,7 @@ html
   body
 
     #header
-      h1 #{@profiler.path}?#{@profiler.query}
+      h1 #{h @profiler.path}?#{h @profiler.query}
       dl
         dt Request ID
         dd= @profiler.id
@@ -22,7 +22,7 @@ html
         h2 Browser
 
         .browser.user_agent
-          h3 User Agent: #{browser.user_agent.browser}
+          h3 User Agent: #{h browser.user_agent.browser}
           .more
             dl
               dt Version
@@ -40,24 +40,24 @@ html
             pre= browser.user_agent
 
         .browser.navigation
-          h3 Navigation: #{browser.navigation.type}
+          h3 Navigation: #{h browser.navigation.type}
           .more
             dl
               dt Type
-              dd #{browser.navigation.type}(#{browser.navigation[:type]})
+              dd #{h browser.navigation.type}(#{h browser.navigation[:type]})
               dt Redirect Count
               dd= browser.navigation.redirect_count
         .browser.timing
-          .elapsed-time #{browser.timing.load_time}ms
+          .elapsed-time #{h browser.timing.load_time}ms
           h3 Timing
           .more
             .timing-bars
               - browser.timing.timings.each do |timing|
                 .timing
-                  .timing-bar(style="left: #{(timing.started_at / (browser.timing.load_time * 1.0)) * 100}%; width: #{(timing.elapsed_time / (browser.timing.load_time * 1.0)) * 100}%")
+                  .timing-bar(style="left: #{h (timing.started_at / (browser.timing.load_time * 1.0)) * 100}%; width: #{h (timing.elapsed_time / (browser.timing.load_time * 1.0)) * 100}%")
                   .timing-label
                     = timing.name
-                    | : #{timing.elapsed_time}ms(+#{timing.started_at}ms)
+                    | : #{h timing.elapsed_time}ms(+#{h timing.started_at}ms)
 
     div#profiles
       h2 Profiles
@@ -68,11 +68,11 @@ html
           - profile_nest.push(last_profile_id)
         - while profile.parent_profile_id != profile_nest.last
           - profile_nest.pop
-        div.profile(class="type-#{profile.type}" style="margin-left: #{profile_nest.length * 10}px;")
+        div.profile(class="type-#{h profile.type}" style="margin-left: #{h profile_nest.length * 10}px;")
           p.elapsed-time
-            = sprintf("%0.2f", BigDecimal("#{profile.elapsed_time * 1000}").floor(2))
+            = sprintf("%0.2f", BigDecimal("#{h profile.elapsed_time * 1000}").floor(2))
             | ms
-          h3 #{profile.label}: #{profile.title}
+          h3 #{h profile.label}: #{h profile.title}
           .more
             dl
               dt Profile ID
