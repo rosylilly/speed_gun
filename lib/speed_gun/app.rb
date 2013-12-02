@@ -9,10 +9,6 @@ class SpeedGun::App < Sinatra::Base
     set :views, File.join(root_dir, 'views')
   end
 
-  get '/' do
-    "SpeedGun v#{SpeedGun::VERSION}"
-  end
-
   post '/profile/:id' do
     @profiler = SpeedGun::Profiler.load(params[:id])
 
