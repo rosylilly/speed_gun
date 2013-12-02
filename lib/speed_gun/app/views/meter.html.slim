@@ -1,4 +1,4 @@
-#speed_gun(data-speed-gun-endpoint="#{SpeedGun.config.prefix}/profile" data-speed-gun-id="#{SpeedGun.current.id} data-rack-ms=#{SpeedGun.current.total}")
+#speed_gun(data-speed-gun-endpoint="#{SpeedGun.config.prefix}/profile" data-speed-gun-id="#{SpeedGun.current.id}" data-rack-ms="#{SpeedGun.current.total * 1000}")
   - if SpeedGun.config.show_button?
     #speed_gun_button(style="position: fixed; bottom: 10px; right: 10px;")
       a#toggle_speed_gun(href="#{File.join(SpeedGun.config.prefix, 'profile', SpeedGun.current.id)}" target="_blank" style="display: block; padding: 5px 10px; font-size: 12px; height: 30px; line-height: 30px;  box-shadow: 0 0 2px #333; background-color: #fff; color: #333; text-decoration: none; border-radius: 30px;")
