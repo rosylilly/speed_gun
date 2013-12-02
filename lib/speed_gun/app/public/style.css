@@ -120,8 +120,8 @@ dd {
 .profile.type-active_record { border-color: #3498db; }
 .profile.type-action_controller { border-color: #f1c40f; }
 .profile.type-action_view { border-color: #2ecc71; }
-.profile.type-js_profiler { border-color: #9b59b6; }
-.profile.type-manual_profiler { border-color: #34495e; }
+.profile.type-js { border-color: #9b59b6; }
+.profile.type-manual { border-color: #34495e; }
 
 .profile h3, .browser h3 {
   margin: 0;
@@ -149,7 +149,7 @@ dd {
   border-top: 1px solid #ecf0f1;
 }
 
-.profile.type-js_profiler .backtrace li {
+.profile.type-js .backtrace li {
   white-space: pre;
   margin: 0 -10px 10px -10px;
   padding:  0 10px 10px 10px;

@@ -1,6 +1,6 @@
 require 'speed_gun/profiler/base'
 
-class SpeedGun::Profiler::JsProfiler < SpeedGun::Profiler::Base
+class SpeedGun::Profiler::Js < SpeedGun::Profiler::Base
   def self.profile(profiler, title, elapsed_time, backtrace)
     profile = new
     profiler.profiles << profile

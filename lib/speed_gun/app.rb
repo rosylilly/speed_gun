@@ -18,7 +18,7 @@ class SpeedGun::App < Sinatra::Base
       end
 
       if params[:js]
-        SpeedGun::Profiler::JsProfiler.profile(
+        SpeedGun::Profiler::Js.profile(
           @profiler,
           params[:js]['title'] || '',
           params[:js]['elapsed_time'] || 0,

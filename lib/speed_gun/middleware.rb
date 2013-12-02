@@ -16,11 +16,7 @@ class SpeedGun::Middleware
 
     SpeedGun.current = SpeedGun::Profiler.new(env) if SpeedGun.enable?
 
-    if SpeedGun.active?
-      call_with_speed_gun(env)
-    else
-      @app.call(env)
-    end
+    call_with_speed_gun(env)
   ensure
     SpeedGun.current = nil
   end
@@ -43,7 +39,7 @@ class SpeedGun::Middleware
   end
 
   def remove_conditional_get_headers(env)
-    return unless SpeedGun.config.force_profile?
+    return if !SpeedGun.config.force_profile? && SpeedGun.active?
 
     env['HTTP_IF_MODIFIED_SINCE'] = ''
     env['HTTP_IF_NONE_MATCH'] = ''
