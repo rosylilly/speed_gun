@@ -1,6 +1,7 @@
 require 'speed_gun'
 require 'speed_gun/store'
 require 'speed_gun/browser'
+require 'speed_gun/hook'
 require 'securerandom'
 require 'msgpack'
 require 'multi_json'
@@ -76,6 +77,8 @@ class SpeedGun::Profiler
   def dump
     @total = Time.now - @requested_at
     SpeedGun.store[id] = to_msgpack
+
+    SpeedGun::Hook.invoke_all(self)
   end
 
   def browser=(hash)
