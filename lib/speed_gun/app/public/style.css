@@ -16,7 +16,7 @@ body {
   padding: 20px;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
-  z-index: 3;
+  z-index: 100;
 }
 
 #header h1, #header dl {
@@ -57,44 +57,37 @@ dd {
   background-color: #fff;
 }
 
-#timeline-view {
-  position: relative;
+.timing-bars {
   margin: 20px 0;
-  height: 40px;
+  background-color: #2c3e50;
+}
+
+.timing-bars .timing {
+  position: relative;
+  padding-top: 1em;
+  height: 2em;
+  line-height: 2;
+  color: #fff;
+  word-wrap: keep-all;
+  white-space: nowrap;
+  text-indent: 5px;
+}
+
+.timing-bars .timing:hover {
   background-color: #34495e;
 }
 
-#timeline-view .time, #timeline-view .label {
+.timing-bars .timing-bar {
   position: absolute;
-}
-
-#timeline-view .time {
-  margin-left: -2.5px;
-  width: 5px;
-  height: 100%;
+  top: 0;
   background-color: #3498db;
+  height: 1em;
+  min-width: 1px;
 }
 
-#timeline-view .label {
-  display: none;
-  padding: 2px 5px;
-  width: 100px;
-  background-color: #fff;
+.timing-bars .timing-label {
+  position: relative;
   z-index: 2;
-}
-
-#timeline-view .label.left {
-  left: 3px;
-  text-align: left;
-}
-
-#timeline-view .label.right {
-  right: 3px;
-  text-align: right;
-}
-
-#timeline-view .time:hover .label {
-  display: block;
 }
 
 #rack-envs ul {
@@ -107,7 +100,7 @@ dd {
   color: #27ae60;
 }
 
-.profile, .env, .client-info {
+.profile, .env, .browser {
   position: relative;
   margin: 5px 0;
   padding: 5px 10px;
@@ -128,7 +121,7 @@ dd {
 .profile.type-action_controller { border-color: #f1c40f; }
 .profile.type-action_view { border-color: #2ecc71; }
 
-.profile h3, .client-info h3 {
+.profile h3, .browser h3 {
   margin: 0;
   padding: 0;
   font-size: 100%;
@@ -147,15 +140,15 @@ dd {
   text-align: right;
 }
 
-.profile .more {
-  display: none;
-}
-
 .profile .backtrace {
-  margin: 10px 0;
-  padding: 10px 0 0 0;
+  margin: 10px -10px;
+  padding: 10px 10px 0 10px;
   list-style: none outside;
   border-top: 1px solid #ecf0f1;
+}
+
+.more {
+  display: none;
 }
 
 pre {

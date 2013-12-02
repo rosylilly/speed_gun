@@ -9,23 +9,55 @@ html
   body
 
     #header
-      h1
-        img(src="#{SpeedGun.config.prefix}/clock.png" height="24")
-        | #{@profiler.path}?#{@profiler.query}
+      h1 #{@profiler.path}?#{@profiler.query}
       dl
         dt Request ID
         dd= @profiler.id
         dt Requested At
         dd= @profiler.requested_at.strftime("%Y-%m-%d %H:%M:%S")
 
-    div#rack-envs
-      h2 Rack ENVs
-      ul
-        - @profiler.env.each_pair do |key, val|
-          li.env
-            span.env-key= key
-            span.env-val= val.inspect
+    - if @profiler.browser
+      - browser = @profiler.browser
+      div#browser
+        h2 Browser
 
+        .browser.user_agent
+          h3 User Agent: #{browser.user_agent.browser}
+          .more
+            dl
+              dt Version
+              dd= browser.user_agent.version || 'Unknown'
+              - if browser.user_agent.respond_to?(:build)
+                dt Build
+                dd= browser.user_agent.build
+              - if browser.user_agent.respond_to?(:webkit)
+                dt Webkit
+                dd= browser.user_agent.webkit
+              dt OS
+              dd= browser.user_agent.os || 'Unknown'
+              dt Platform
+              dd= browser.user_agent.platform || 'Unknown'
+            pre= browser.user_agent
+
+        .browser.navigation
+          h3 Navigation: #{browser.navigation.type}
+          .more
+            dl
+              dt Type
+              dd #{browser.navigation.type}(#{browser.navigation[:type]})
+              dt Redirect Count
+              dd= browser.navigation.redirect_count
+        .browser.timing
+          .elapsed-time #{browser.timing.load_time}ms
+          h3 Timing
+          .more
+            .timing-bars
+              - browser.timing.timings.each do |timing|
+                .timing
+                  .timing-bar(style="left: #{(timing.started_at / (browser.timing.load_time * 1.0)) * 100}%; width: #{(timing.elapsed_time / (browser.timing.load_time * 1.0)) * 100}%")
+                  .timing-label
+                    = timing.name
+                    | : #{timing.elapsed_time}ms(+#{timing.started_at}ms)
 
     div#profiles
       h2 Profiles
@@ -55,3 +87,11 @@ html
               - if profile.backtrace.empty?
                 li No Backtraces
         - last_profile_id = profile.id
+
+    div#rack-envs
+      h2 Rack ENVs
+      ul
+        - @profiler.env.each_pair do |key, val|
+          li.env
+            span.env-key= key
+            span.env-val= val.inspect

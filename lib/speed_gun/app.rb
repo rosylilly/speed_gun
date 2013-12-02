@@ -21,7 +21,7 @@ class SpeedGun::App < Sinatra::Base
       @profiler.dump
     end
 
-    [200, {}, '']
+    204
   end
 
   get '/profile/:id.json' do
