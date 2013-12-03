@@ -14,7 +14,11 @@ class SpeedGun::Profiler
 
     return nil unless src
 
-    data = MessagePack.unpack(src)
+    restore(src)
+  end
+
+  def self.restore(src)
+    data = src.kind_of?(String) ? MessagePack.unpack(src) : src
 
     profiler = new({})
     profiler.restore_by_hash(data)
