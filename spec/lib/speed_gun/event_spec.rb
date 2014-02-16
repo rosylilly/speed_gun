@@ -4,7 +4,7 @@ describe SpeedGun::Event do
   let(:profile) { SpeedGun::Profile.new }
   let(:event_name) { 'spec.test' }
 
-  subject(:event) { described_class.new(profile.id, event_name) }
+  subject(:event) { described_class.new(event_name, profile.id) }
 
   describe '#profile_id' do
     subject { event.profile_id }
@@ -23,6 +23,7 @@ describe SpeedGun::Event do
     subject { event.name }
 
     it { should be_kind_of(String) }
+    it { should eq(event_name) }
   end
 
   describe '#started_at' do

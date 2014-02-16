@@ -19,14 +19,15 @@ class SpeedGun::Event
   # @return [Time, nil] finish time
   attr_reader :finished_at
 
-  # @param profile_id [String] profile ID
   # @param name [String] event name
+  # @param profile_id [String] profile ID
   # @param payload [Hash] payload
   # @param started_at [Time] start time
   # @param finished_at [Time, nil] finish time
   # @return [SpeedGun::Event] instance of SpeedGun::Event
   def initialize(
-    profile_id, name,
+    name,
+    profile_id = SpeedGun.current_profile.id,
     payload = {}, started_at = Time.now, finished_at = nil
   )
     @id = SecureRandom.uuid
