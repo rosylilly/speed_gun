@@ -14,4 +14,13 @@ describe SpeedGun::Profile do
 
     it { should be_kind_of(Array) }
   end
+
+  describe '#record!' do
+    let(:event) { double }
+
+    it 'records event' do
+      expect(profile.record!(event)).to eq(profile.events)
+      expect(profile.events).to include(event)
+    end
+  end
 end
