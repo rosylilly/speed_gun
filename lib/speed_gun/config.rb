@@ -6,6 +6,10 @@ class SpeedGun::Config < Hashie::Dash
   # @return [true, false] true if enabled speed gun
   property :enable, default: true
 
+  # @!attribute [rw]
+  # @return [Object, nil] logger of the speed gun
+  property :logger, default: nil
+
   # @return [true]
   def enable!
     self[:enable] = true
