@@ -3,7 +3,7 @@ require 'speed_gun'
 
 class SpeedGun::Config < Hashie::Dash
   # @!attribute [rw]
-  # @return [true, false] true if enabled speed gun
+  # @return [Boolean] true if enabled speed gun
   property :enable, default: true
 
   # @!attribute [rw]
@@ -20,12 +20,12 @@ class SpeedGun::Config < Hashie::Dash
     self[:enable] = false
   end
 
-  # @return [true, false] true if enabled speed gun
+  # @return [Boolean] true if enabled speed gun
   def enabled?
     !!enable
   end
 
-  # @return [true, false] true if disabled speed gun
+  # @return [Boolean] true if disabled speed gun
   def disabled?
     !enabled?
   end
