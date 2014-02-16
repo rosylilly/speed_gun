@@ -1,5 +1,47 @@
 require 'spec_helper'
 
 describe SpeedGun::Event do
-  subject(:event) { described_class.new }
+  let(:profile) { SpeedGun::Profile.new }
+  let(:event_name) { 'spec.test' }
+
+  subject(:event) { described_class.new(profile.id, event_name) }
+
+  describe '#profile_id' do
+    subject { event.profile_id }
+
+    it { should be_kind_of(String) }
+    it { should eq(profile.id) }
+  end
+
+  describe '#id' do
+    subject { event.id }
+
+    it { should be_kind_of(String) }
+  end
+
+  describe '#name' do
+    subject { event.name }
+
+    it { should be_kind_of(String) }
+  end
+
+  describe '#started_at' do
+    subject { event.started_at }
+
+    it { should be_kind_of(Time) }
+  end
+
+  describe '#finished_at' do
+    subject { event.finished_at }
+
+    context 'when finished event' do
+      before { event.finish! }
+
+      it { should be_kind_of(Time) }
+    end
+
+    context 'when continues event' do
+      it { should be_nil }
+    end
+  end
 end
