@@ -24,6 +24,9 @@ class SpeedGun::Profile
   # @param event [SpeedGun::Event] record event
   # @return [Array<SpeedGun::Event>] recorded events
   def record!(event)
+    config.logger.debug(
+      "[SpeedGun] Record Event: #{event.name}: #{'%0.2f' % (event.duration * 1000)}ms"
+    )
     @events.push(event)
   end
 end

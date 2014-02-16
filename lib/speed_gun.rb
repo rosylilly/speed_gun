@@ -39,3 +39,5 @@ module SpeedGun
     end
   end
 end
+
+require 'speed_gun/railtie' if defined?(Rails)

@@ -12,7 +12,7 @@ class SpeedGun::Middleware
   #
   # @return [Rack::Response]
   def call(env)
-    if SpeedGun.enabled?
+    if with_speed_gun?(env)
       call_with_speed_gun(env)
     else
       call_without_speed_gun(env)
@@ -21,6 +21,14 @@ class SpeedGun::Middleware
 
   private
 
+  def with_speed_gun?(env)
+    SpeedGun.enabled? && !skip?(env['PATH_INFO'])
+  end
+
+  def skip?(path)
+    SpeedGun.config.skip_paths.any? { |regexp| regexp.match(path) }
+  end
+
   def call_without_speed_gun(env)
     @app.call(env)
   end
@@ -28,7 +36,7 @@ class SpeedGun::Middleware
   def call_with_speed_gun(env)
     SpeedGun.current_profile = SpeedGun::Profile.new
 
-    SpeedGun::Profiler::RackProfier.profile(env) do
+    SpeedGun::Profiler::RackProfier.profile do
       call_without_speed_gun(env)
     end
   ensure

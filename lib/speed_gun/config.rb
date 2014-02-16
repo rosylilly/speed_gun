@@ -10,6 +10,10 @@ class SpeedGun::Config < Hashie::Dash
   # @return [Object, nil] logger of the speed gun
   property :logger, default: nil
 
+  # @!attribute [rw]
+  # @return [Array<Regexp>] paths of skip the speed gun
+  property :skip_paths, default: []
+
   # @return [true]
   def enable!
     self[:enable] = true
