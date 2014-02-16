@@ -1,13 +1,17 @@
 require 'securerandom'
+require 'speed_gun'
 require 'speed_gun/event'
 
-module SpeedGun
-  class Profile
-    attr_reader :id, :events
+class SpeedGun::Profile
+  # @return [String] Profile ID
+  attr_reader :id
 
-    def initialize
-      @id = SecureRandom.uuid
-      @events = []
-    end
+  # @return [Array<SpeedGun::Event>] Profile events
+  attr_reader :events
+
+  # @return [SpeedGun::Profile] instance of SpeedGun::Profile
+  def initialize
+    @id = SecureRandom.uuid
+    @events = []
   end
 end
