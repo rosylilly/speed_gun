@@ -44,4 +44,12 @@ describe SpeedGun::Event do
       it { should be_nil }
     end
   end
+
+  describe '#finish!' do
+    it 'finishes the event' do
+      expect(event).to_not be_finished
+      event.finish!
+      expect(event).to be_finished
+    end
+  end
 end
