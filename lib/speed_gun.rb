@@ -3,6 +3,7 @@ require 'thread'
 require 'speed_gun/version'
 require 'speed_gun/config'
 require 'speed_gun/profile'
+require 'speed_gun/middleware'
 
 module SpeedGun
   class << self
