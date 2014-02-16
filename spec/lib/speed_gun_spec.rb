@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe SpeedGun do
+  subject { described_class }
+
   describe '#config' do
     subject { described_class.config }
 
@@ -21,6 +23,30 @@ describe SpeedGun do
 
       thread = Thread.new { expect(described_class.current_profile).to be_nil }
       thread.join
+    end
+  end
+
+  describe '#discard_profile!' do
+    let(:profile) { double }
+
+    it 'discards current profile' do
+      described_class.current_profile = profile
+      described_class.discard_profile!
+      expect(described_class.current_profile).to be_nil
+    end
+  end
+
+  describe '#enabled?' do
+    context 'when enabled' do
+      before { described_class.config.stub(enabled?: true) }
+
+      it { should be_enabled }
+    end
+
+    context 'when disabled' do
+      before { described_class.config.stub(enabled?: false) }
+
+      it { should_not be_enabled }
     end
   end
 end
