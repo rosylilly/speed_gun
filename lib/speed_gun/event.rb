@@ -36,8 +36,6 @@ class SpeedGun::Event
     @finished_at = Time.now
   end
 
-  # Indicates if the event is finished
-  #
   # @return [true, false] true if the event is finished
   def finished?
     !@finished_at.nil?
