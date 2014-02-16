@@ -8,5 +8,9 @@ class SpeedGun::Railtie < ::Rails::Railtie
     SpeedGun.config.skip_paths.push(
       /^#{Regexp.escape(app.config.assets.prefix)}/
     )
+
+    ActiveSupport.on_load(:active_record) do
+      require 'speed_gun/profiler/active_record_profiler'
+    end
   end
 end
