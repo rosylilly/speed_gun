@@ -1,11 +1,11 @@
 require 'speed_gun/profiler/active_support_notifications_profiler'
 
-class SpeedGun::Profiler::ActiveRecordProfiler <
+class SpeedGun::Profiler::ActionViewProfiler <
   SpeedGun::Profiler::ActiveSupportNotificatiosProfiler
 
-  subscribe /\.active_record$/
+  subscribe /^!(render_template|render_partial)\.action_view$/
 
   def self.name
-    'active_record'
+    'action_view'
   end
 end
