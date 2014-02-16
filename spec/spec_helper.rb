@@ -1,3 +1,5 @@
+require 'support/simplecov'
+
 require 'speed_gun'
 
 RSpec.configure do |config|
