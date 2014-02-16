@@ -1,1 +1,0 @@
-../../../lib/speed_gun/app/public/browser.js

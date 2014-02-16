@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = SpeedGun::VERSION
   spec.authors       = ['Sho Kusano']
   spec.email         = ['rosylilly@aduca.org']
-  spec.summary       = %q{better web app profiler on Rails and Rack apps}
-  spec.description   = %q{better web app profiler on Rails and Rack apps}
+  spec.summary       = %q{Better web app profiler for Rails apps}
+  spec.description   = %q{Better web app profiler for Rails apps}
   spec.homepage      = 'https://github.com/rosylilly/speed_gun'
   spec.license       = 'MIT'
 
@@ -20,10 +20,4 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
-
-  spec.add_dependency 'sinatra', '~> 1.4.0'
-  spec.add_dependency 'msgpack', '~> 0.5.0'
-  spec.add_dependency 'multi_json', '~> 1.0'
-  spec.add_dependency 'slim', '~> 2.0'
-  spec.add_dependency 'useragent', '~> 0.10'
 end
