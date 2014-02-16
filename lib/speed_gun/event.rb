@@ -49,4 +49,11 @@ class SpeedGun::Event
   def finished?
     !@finished_at.nil?
   end
+
+  # Time duration of the event
+  #
+  # @return [Float] a duration of the event
+  def duration
+    finished? ? finished_at.to_f - started_at.to_f : -1
+  end
 end

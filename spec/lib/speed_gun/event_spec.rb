@@ -53,4 +53,18 @@ describe SpeedGun::Event do
       expect(event).to be_finished
     end
   end
+
+  describe '#duration' do
+    subject(:duration) { event.duration }
+
+    context 'when continues event' do
+      it { should eq(-1) }
+    end
+
+    context 'when finished event' do
+      before { event.finish! }
+
+      it { should be_kind_of(Float) }
+    end
+  end
 end
