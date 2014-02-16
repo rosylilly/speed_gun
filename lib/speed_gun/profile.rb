@@ -9,10 +9,14 @@ class SpeedGun::Profile
   # @return [Array<SpeedGun::Event>] recorded events
   attr_reader :events
 
+  # @return [SpeedGun::Config] the config of the profile
+  attr_reader :config
+
   # @return [SpeedGun::Profile] instance of SpeedGun::Profile
-  def initialize
+  def initialize(config = SpeedGun.config.dup)
     @id = SecureRandom.uuid
     @events = []
+    @config = config
   end
 
   # Record an event
