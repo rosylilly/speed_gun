@@ -12,6 +12,18 @@ class SpeedGun::Profile
   # @return [SpeedGun::Config] the config of the profile
   attr_reader :config
 
+  # @return [Integer] status code of the response
+  attr_accessor :status
+
+  # @return [String] method of the request
+  attr_accessor :request_method
+
+  # @return [String] path of the request
+  attr_accessor :path
+
+  # @return [String] query of the request
+  attr_accessor :query
+
   # @return [SpeedGun::Profile] instance of SpeedGun::Profile
   def initialize(config = SpeedGun.config.dup)
     @id = SecureRandom.uuid

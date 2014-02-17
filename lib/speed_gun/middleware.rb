@@ -35,11 +35,24 @@ class SpeedGun::Middleware
 
   def call_with_speed_gun(env)
     SpeedGun.current_profile = SpeedGun::Profile.new
+    SpeedGun.current_profile.request_method = env['REQUEST_METHOD'].to_s.upcase
+    SpeedGun.current_profile.path = env['PATH_INFO'].to_s
+    SpeedGun.current_profile.query = env['QUERY_STRING'].to_s
 
-    SpeedGun::Profiler::RackProfier.profile do
+    status, headers, body = SpeedGun::Profiler::RackProfier.profile do
       call_without_speed_gun(env)
     end
+
+    SpeedGun.current_profile.status = status
+
+    inject_header(headers)
+
+    [status, headers, body]
   ensure
     SpeedGun.discard_profile!
+  end
+
+  def inject_header(headers)
+    headers['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
   end
 end
