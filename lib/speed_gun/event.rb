@@ -1,6 +1,18 @@
 require 'speed_gun'
 
 class SpeedGun::Event
+  def self.from_hash(hash)
+    event = new(
+      hash['name'],
+      hash['payload'],
+      Time.at(hash['started_at']),
+      hash['finished_at'] ? Time.at(hash['finished_at']) : nil
+    )
+    event.instance_variable_set(:@id, hash['id'])
+
+    event
+  end
+
   # @return [String] event ID
   attr_reader :id
 
@@ -46,5 +58,15 @@ class SpeedGun::Event
   # @return [Float] a duration of the event
   def duration
     finished? ? finished_at.to_f - started_at.to_f : -1
+  end
+
+  def to_hash
+    {
+      id: id,
+      name: name,
+      payload: payload,
+      started_at: started_at.to_f,
+      finished_at: finished? ? finished_at.to_f : nil
+    }
   end
 end
