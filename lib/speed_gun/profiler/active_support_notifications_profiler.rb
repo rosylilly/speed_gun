@@ -2,15 +2,14 @@ require 'speed_gun/profiler'
 
 class SpeedGun::Profiler::ActiveSupportNotificatiosProfiler < SpeedGun::Profiler
   def self.subscribe(event)
-    @event = event
     klass = self
     ActiveSupport::Notifications.subscribe(event) do |*args|
-      klass.record(*args)
+      klass.record(event, *args)
     end
   end
 
-  def self.record(name, started, ended, id, payload)
-    name = "#{self.name}.#{name.sub(@event, '\1')}"
+  def self.record(event, name, started, ended, id, payload)
+    name = "#{self.name}.#{name.sub(event, '\1')}"
 
     payload[:backtrace] = backtrace
 
