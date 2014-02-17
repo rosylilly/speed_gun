@@ -12,7 +12,7 @@ class SpeedGun::Profiler
     ret = yield
 
     event = SpeedGun::Event.new(
-      name, SpeedGun.current_profile.id, payload, starts_at, Time.now
+      name, payload, starts_at, Time.now
     )
     SpeedGun.current_profile.record!(event)
 

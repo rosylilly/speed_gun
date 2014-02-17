@@ -14,10 +14,7 @@ class SpeedGun::Profiler::ActiveSupportNotificatiosProfiler < SpeedGun::Profiler
 
     payload[:backtrace] = backtrace
 
-    event = SpeedGun::Event.new(
-      name, SpeedGun.current_profile.id,
-      payload, started, ended
-    )
+    event = SpeedGun::Event.new(name, payload, started, ended)
     SpeedGun.current_profile.record!(event)
   end
 

@@ -1,9 +1,6 @@
 require 'speed_gun'
 
 class SpeedGun::Event
-  # @return [String] profile ID
-  attr_reader :profile_id
-
   # @return [String] event ID
   attr_reader :id
 
@@ -20,18 +17,12 @@ class SpeedGun::Event
   attr_reader :finished_at
 
   # @param name [String] event name
-  # @param profile_id [String] profile ID
   # @param payload [Hash] payload
   # @param started_at [Time] start time
   # @param finished_at [Time, nil] finish time
   # @return [SpeedGun::Event] instance of SpeedGun::Event
-  def initialize(
-    name,
-    profile_id = SpeedGun.current_profile.id,
-    payload = {}, started_at = Time.now, finished_at = nil
-  )
+  def initialize(name, payload = {}, started_at = Time.now, finished_at = nil)
     @id = SecureRandom.uuid
-    @profile_id = profile_id
     @name = name
     @payload = Hashie::Mash.new(payload)
     @started_at = started_at

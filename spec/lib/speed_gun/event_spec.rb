@@ -1,17 +1,9 @@
 require 'spec_helper'
 
 describe SpeedGun::Event do
-  let(:profile) { SpeedGun::Profile.new }
   let(:event_name) { 'spec.test' }
 
-  subject(:event) { described_class.new(event_name, profile.id) }
-
-  describe '#profile_id' do
-    subject { event.profile_id }
-
-    it { should be_kind_of(String) }
-    it { should eq(profile.id) }
-  end
+  subject(:event) { described_class.new(event_name) }
 
   describe '#id' do
     subject { event.id }
