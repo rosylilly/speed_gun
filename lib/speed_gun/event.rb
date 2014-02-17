@@ -62,10 +62,10 @@ class SpeedGun::Event
 
   def to_hash
     {
-      name: name,
-      payload: payload,
-      started_at: started_at.to_f,
-      finished_at: finished? ? finished_at.to_f : nil
+      'name' => name,
+      'payload' => payload,
+      'started_at' => started_at.to_f,
+      'finished_at' => finished? ? finished_at.to_f : nil
     }
   end
 end

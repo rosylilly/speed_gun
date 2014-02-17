@@ -59,4 +59,12 @@ describe SpeedGun::Event do
       it { should be_kind_of(Float) }
     end
   end
+
+  describe '#to_hash' do
+    it 'valid serialize' do
+      expect(
+        SpeedGun::Event.from_hash(event.id, event.to_hash).to_hash
+      ).to eq(event.to_hash)
+    end
+  end
 end

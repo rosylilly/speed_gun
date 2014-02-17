@@ -60,11 +60,11 @@ class SpeedGun::Profile
 
   def to_hash
     {
-      events: events.map(&:id),
-      status: status,
-      request_method: request_method,
-      path: path,
-      query: query
+      'events' => events.map(&:id),
+      'status' => status,
+      'request_method' => request_method,
+      'path' => path,
+      'query' => query
     }
   end
 end
