@@ -1,7 +1,10 @@
 require 'speed_gun'
+require 'speed_gun/template'
 require 'speed_gun/profiler/rack_profiler'
 
 class SpeedGun::Middleware
+  BODY_END_REGEXP = /<\/(?:body|html)>/i
+
   # @param app [#call] Rack application
   # @return [SpeedGun::Middleware] a instance of SpeedGun::Middleware
   def initialize(app)
@@ -39,17 +42,20 @@ class SpeedGun::Middleware
     SpeedGun.current_profile.path = env['PATH_INFO'].to_s
     SpeedGun.current_profile.query = env['QUERY_STRING'].to_s
 
-    status, headers, body = SpeedGun::Profiler::RackProfier.profile do
+    response = SpeedGun::Profiler::RackProfier.profile do
       call_without_speed_gun(env)
     end
 
-    SpeedGun.current_profile.status = status
+    SpeedGun.current_profile.status = response[0]
 
     if SpeedGun.current_profile.active?
-      inject_header(headers)
+      inject_header(response[1])
+      if SpeedGun.current_profile.config.auto_inject?
+        response = inject_body(*response)
+      end
     end
 
-    [status, headers, body]
+    response
   ensure
     if SpeedGun.current_profile.active?
       SpeedGun.config.store.save(SpeedGun.current_profile)
@@ -59,5 +65,27 @@ class SpeedGun::Middleware
 
   def inject_header(headers)
     headers['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
+  end
+
+  def inject_body(status, headers, body)
+    unless headers['Content-Type'] =~ /text\/html/
+      return [status, headers, body]
+    end
+
+    response = Rack::Response.new([], status, headers)
+
+    body = [body] if body.kind_of?(String)
+    body.each { |fragment| response.write(inject_fragment(fragment)) }
+    body.close if body.respond_to?(:close)
+
+    response.finish
+  end
+
+  def inject_fragment(body)
+    return body unless body.match(BODY_END_REGEXP)
+
+    body.sub(BODY_END_REGEXP) do |matched|
+      SpeedGun::Template.render + matched
+    end
   end
 end

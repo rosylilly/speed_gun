@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'hashie'
   spec.add_dependency 'msgpack'
+  spec.add_dependency 'slim'
 end

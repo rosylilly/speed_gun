@@ -19,6 +19,10 @@ class SpeedGun::Config < Hashie::Dash
   # @return [SpeedGun::Store] store of events and profiles
   property :store, default: SpeedGun::Store::MemoryStore.new
 
+  # @!attribute [rw]
+  # @return [Boolean] true if enable auto injection
+  property :auto_inject, default: true
+
   # @return [true]
   def enable!
     self[:enable] = true
@@ -37,5 +41,10 @@ class SpeedGun::Config < Hashie::Dash
   # @return [Boolean] true if disabled speed gun
   def disabled?
     !enabled?
+  end
+
+  # @return [Boolean] true if enable auto injection
+  def auto_inject?
+    auto_inject
   end
 end
