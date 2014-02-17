@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.8.2'
   spec.add_development_dependency 'simplecov-console'
   spec.add_development_dependency 'rack-test'
+  spec.add_development_dependency 'coveralls'
 
   spec.add_dependency 'hashie'
   spec.add_dependency 'msgpack'
