@@ -1,29 +1,26 @@
 require 'speed_gun/store'
 
 class SpeedGun::Store::ElasticSearchStore < SpeedGun::Store
-  DEFAULT_PREFIX = 'speed_gun'
+  DEFAULT_INDEX = 'speed_gun'
 
   def initialize(options = {})
-    @prefix = options[:prefix] || DEFAULT_PREFIX
+    @index = options[:index] || DEFAULT_INDEX
+    @async = options.fetch(:async, true)
     @client = options[:client] || default_clinet(options)
   end
 
   def save(object)
-    @client.index(
-      index: index(object.class),
-      type: underscore(object.class.name),
-      id: object.id,
-      body: object.to_hash
-    )
+    @async ? save_with_async(object) : save_without_async(object)
   end
 
   def load(klass, id)
     hit = @client.search(
-      index: index(klass),
+      index: @index,
       body: {
         query: {
           match: {
-            "_id" => id
+            "_id" => id,
+            "_type" => underscore(klass.name)
           }
         }
       }
@@ -33,6 +30,21 @@ class SpeedGun::Store::ElasticSearchStore < SpeedGun::Store
   end
 
   private
+
+  def save_with_async(object)
+    Thread.new(object) { |object| save_without_async(object) }
+  end
+
+  def save_without_async(object)
+    @client.index(
+      index: @index,
+      type: underscore(object.class.name),
+      id: object.id,
+      body: object.to_hash.merge(
+        '@timestamp' => Time.now
+      )
+    )
+  end
 
   def index(klass)
     [@prefix, underscore(klass.name)].join('-')
