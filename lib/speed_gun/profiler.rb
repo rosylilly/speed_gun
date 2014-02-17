@@ -1,6 +1,6 @@
 require 'speed_gun'
 
-# @abstruct
+# @abstract
 class SpeedGun::Profiler
   def self.profile(*args, &block)
     new.profile(*args, &block)
