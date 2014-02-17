@@ -45,11 +45,15 @@ class SpeedGun::Middleware
 
     SpeedGun.current_profile.status = status
 
-    inject_header(headers)
+    if SpeedGun.current_profile.active?
+      inject_header(headers)
+    end
 
     [status, headers, body]
   ensure
-    SpeedGun.config.store.save(SpeedGun.current_profile)
+    if SpeedGun.current_profile.active?
+      SpeedGun.config.store.save(SpeedGun.current_profile)
+    end
     SpeedGun.discard_profile!
   end
 

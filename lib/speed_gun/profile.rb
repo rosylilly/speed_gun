@@ -45,6 +45,7 @@ class SpeedGun::Profile
     @id = SecureRandom.uuid
     @events = []
     @config = config
+    @active = true
   end
 
   # Record an event
@@ -55,8 +56,24 @@ class SpeedGun::Profile
     config.logger.debug(
       "[SpeedGun] Record Event: #{event.name}: #{'%0.2f' % (event.duration * 1000)}ms"
     ) if config.logger
-    config.store.save(event)
+    config.store.save(event) if active?
     @events.push(event)
+  end
+
+  def active?
+    @active
+  end
+
+  def deactive?
+    !active?
+  end
+
+  def activate!
+    @active = true
+  end
+
+  def deactivate!
+    @active = false
   end
 
   def earliest_started_at
