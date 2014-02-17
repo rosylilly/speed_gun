@@ -49,6 +49,7 @@ class SpeedGun::Middleware
 
     [status, headers, body]
   ensure
+    SpeedGun.config.store.save(SpeedGun.current_profile)
     SpeedGun.discard_profile!
   end
 

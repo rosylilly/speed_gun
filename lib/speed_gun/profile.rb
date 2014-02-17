@@ -3,6 +3,21 @@ require 'speed_gun'
 require 'speed_gun/event'
 
 class SpeedGun::Profile
+  def self.from_hash(id, hash)
+    profile = new
+
+    hash['events'].map! do |event_id|
+      SpeedGun.config.store.load(SpeedGun::Event, event_id)
+    end
+
+    hash['id'] = id
+    hash.each_pair do |key, val|
+      profile.instance_variable_set(:"@#{key}", val)
+    end
+
+    profile
+  end
+
   # @return [String] profile ID
   attr_reader :id
 
@@ -39,6 +54,17 @@ class SpeedGun::Profile
     config.logger.debug(
       "[SpeedGun] Record Event: #{event.name}: #{'%0.2f' % (event.duration * 1000)}ms"
     )
+    config.store.save(event)
     @events.push(event)
+  end
+
+  def to_hash
+    {
+      events: events.map(&:id),
+      status: status,
+      request_method: request_method,
+      path: path,
+      query: query
+    }
   end
 end

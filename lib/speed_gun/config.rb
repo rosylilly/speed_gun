@@ -1,5 +1,6 @@
 require 'hashie'
 require 'speed_gun'
+require 'speed_gun/store/memory_store'
 
 class SpeedGun::Config < Hashie::Dash
   # @!attribute [rw]
@@ -13,6 +14,10 @@ class SpeedGun::Config < Hashie::Dash
   # @!attribute [rw]
   # @return [Array<Regexp>] paths of skip the speed gun
   property :skip_paths, default: []
+
+  # @!attribute [rw]
+  # @return [SpeedGun::Store] store of events and profiles
+  property :store, default: SpeedGun::Store::MemoryStore.new
 
   # @return [true]
   def enable!

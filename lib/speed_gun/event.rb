@@ -1,14 +1,14 @@
 require 'speed_gun'
 
 class SpeedGun::Event
-  def self.from_hash(hash)
+  def self.from_hash(id, hash)
     event = new(
       hash['name'],
       hash['payload'],
       Time.at(hash['started_at']),
       hash['finished_at'] ? Time.at(hash['finished_at']) : nil
     )
-    event.instance_variable_set(:@id, hash['id'])
+    event.instance_variable_set(:@id, id)
 
     event
   end
@@ -62,7 +62,6 @@ class SpeedGun::Event
 
   def to_hash
     {
-      id: id,
       name: name,
       payload: payload,
       started_at: started_at.to_f,
