@@ -53,7 +53,7 @@ class SpeedGun::Profile
   def record!(event)
     config.logger.debug(
       "[SpeedGun] Record Event: #{event.name}: #{'%0.2f' % (event.duration * 1000)}ms"
-    )
+    ) if config.logger
     config.store.save(event)
     @events.push(event)
   end

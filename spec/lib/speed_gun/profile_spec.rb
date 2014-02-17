@@ -16,7 +16,7 @@ describe SpeedGun::Profile do
   end
 
   describe '#record!' do
-    let(:event) { double }
+    let(:event) { SpeedGun::Event.new('spec.test') }
 
     it 'records event' do
       expect(profile.record!(event)).to eq(profile.events)
