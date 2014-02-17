@@ -65,7 +65,8 @@ class SpeedGun::Event
       'name' => name,
       'payload' => payload,
       'started_at' => started_at.to_f,
-      'finished_at' => finished? ? finished_at.to_f : nil
+      'finished_at' => finished? ? finished_at.to_f : nil,
+      'duration' => duration
     }
   end
 end

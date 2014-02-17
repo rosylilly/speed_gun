@@ -11,6 +11,7 @@ class SpeedGun::Profile
     end
 
     hash['id'] = id
+    hash.delete('duration')
     hash.each_pair do |key, val|
       profile.instance_variable_set(:"@#{key}", val)
     end
@@ -58,13 +59,27 @@ class SpeedGun::Profile
     @events.push(event)
   end
 
+  def earliest_started_at
+    @events.sort_by(&:started_at).first.started_at
+  end
+
+  def latest_finished_at
+    @events.sort_by { |event| event.finished_at || 0 }.last.finished_at
+  end
+
+  def duration
+    finished_at = latest_finished_at
+    finished_at ? finished_at - earliest_started_at : 0
+  end
+
   def to_hash
     {
       'events' => events.map(&:id),
       'status' => status,
       'request_method' => request_method,
       'path' => path,
-      'query' => query
+      'query' => query,
+      'duration' => duration
     }
   end
 end
