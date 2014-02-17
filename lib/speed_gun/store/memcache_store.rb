@@ -1,7 +1,6 @@
-require 'msgpack'
 require 'speed_gun/store'
 
-class SpeedGun::Store::RedisStore < SpeedGun::Store
+class SpeedGun::Store::MemcacheStroe < SpeedGun::Store
   DEFAULT_PREFIX = 'speed-gun'
   DEFAULT_EXPIRES_IN_SECONDS = 60 * 60 * 24
 
@@ -12,10 +11,10 @@ class SpeedGun::Store::RedisStore < SpeedGun::Store
   end
 
   def save(object)
-    @client.setex(
+    @client.set(
       key(object.class, object.id),
-      @expires,
-      object.to_hash.to_msgpack
+      object.to_hash.to_msgpack,
+      @expires
     )
   end
 
@@ -35,7 +34,7 @@ class SpeedGun::Store::RedisStore < SpeedGun::Store
   end
 
   def default_client(options)
-    require 'redis' unless defined? Redis
-    Redis.new(options)
+    require 'dalli' unless defined?(Dalli)
+    Dalli.new(options)
   end
 end
