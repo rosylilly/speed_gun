@@ -14,7 +14,7 @@ class SpeedGun::Profiler
     event = SpeedGun::Event.new(
       name, payload, starts_at, Time.now
     )
-    SpeedGun.current_profile && SpeedGun.current_profile.record!(event)
+    SpeedGun.current_profile.record!(event)
 
     return ret
   end

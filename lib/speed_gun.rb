@@ -14,7 +14,7 @@ module SpeedGun
 
     # @return [SpeedGun::Profile, nil] the profile of a current thread
     def current_profile
-      Thread.current[:speed_gun_current_profile]
+      Thread.current[:speed_gun_current_profile] ||= SpeedGun::Profile.new
     end
 
     # Set the profile of a current thread
