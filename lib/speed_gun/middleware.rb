@@ -50,7 +50,8 @@ class SpeedGun::Middleware
     SpeedGun.current_profile.status = status
 
     if SpeedGun.current_profile.active?
-      inject_header(response)
+      inject_profile_id(response)
+
       if inject_body?(response)
         inject_body(response, body)
       else
@@ -66,7 +67,7 @@ class SpeedGun::Middleware
     SpeedGun.discard_profile!
   end
 
-  def inject_header(response)
+  def inject_profile_id(response)
     response['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
   end
 
