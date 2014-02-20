@@ -50,7 +50,7 @@ class SpeedGun::Middleware
 
     if SpeedGun.current_profile.active?
       inject_header(response[1])
-      if SpeedGun.current_profile.config.auto_inject?
+      if SpeedGun.current_config.auto_inject?
         response = inject_body(*response)
       end
     end

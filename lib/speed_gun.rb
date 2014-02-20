@@ -32,6 +32,11 @@ module SpeedGun
       self.current_profile = nil
     end
 
+    # @return [SpeedGun::Config] the config of a current profile
+    def current_config
+      current_profile.config
+    end
+
     # @see SpeedGun::Config#enabled?
     # @return [Boolean] true if enabled speed gun
     def enabled?
