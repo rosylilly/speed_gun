@@ -27,6 +27,14 @@ describe SpeedGun::Profile do
     end
   end
 
+  describe '#deactivate!' do
+    it 'deactivate self' do
+      expect(profile).to be_active
+      profile.deactivate!
+      expect(profile).to be_deactive
+    end
+  end
+
   describe '#to_hash' do
     let(:event) { SpeedGun::Event.new('spec.test') }
 
