@@ -7,6 +7,8 @@ class SpeedGun::Profiler
   end
 
   def profile(name = self.class.name, payload = {}, &block)
+    return yield if SpeedGun.current_profile.deactive?
+
     starts_at = Time.now
 
     ret = yield
