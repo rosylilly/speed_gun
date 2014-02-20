@@ -37,6 +37,11 @@ module SpeedGun
     def enabled?
       config.enabled?
     end
+
+    # @see SpeedGun::Profiler#profile
+    def profile(*args, &block)
+      SpeedGun::Profiler.profile(*args, &block)
+    end
   end
 end
 
