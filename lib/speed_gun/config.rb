@@ -23,6 +23,14 @@ class SpeedGun::Config < Hashie::Dash
   # @return [Boolean] true if enable auto injection
   property :auto_inject, default: true
 
+  # @!attribute [rw]
+  # @return [Boolean] true if enable profiling javascript
+  property :javascript_profiling, default: true
+
+  # @!attribute [rw]
+  # @return [Boolean] true if show meter
+  property :show_meter, default: true
+
   # @return [true]
   def enable!
     self[:enable] = true
