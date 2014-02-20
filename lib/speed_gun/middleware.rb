@@ -67,12 +67,19 @@ class SpeedGun::Middleware
     SpeedGun.discard_profile!
   end
 
+  def set_profile_id_tracking?
+    (
+      SpeedGun.current_config.browser_profiling &&
+      SpeedGun.current_profile.request_method == 'GET'
+    )
+  end
+
   def inject_profile_id(response)
     response['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
     response.set_cookie(
       SpeedGun.current_config.cookie_name,
       SpeedGun.current_profile.id
-    ) if SpeedGun.current_config.browser_profiling
+    ) if set_profile_id_tracking?
   end
 
   def inject_body?(response)
