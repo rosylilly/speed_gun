@@ -35,6 +35,18 @@ describe SpeedGun::Middleware do
 
         run process
       end
+
+      map '/json' do
+        process = lambda do |env|
+          [
+            200,
+            { 'Content-Type' => 'application/json' },
+            '{"text":"hi"}'
+          ]
+        end
+
+        run process
+      end
     end
     builder.to_app
   end
@@ -60,6 +72,30 @@ describe SpeedGun::Middleware do
       subject { response.headers }
 
       it { should be_has_key('X-SpeedGun-Profile-Id') }
+    end
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should include('speed-gun') }
+    end
+  end
+
+  describe 'GET /json' do
+    subject(:response) { get '/json' }
+
+    it { should be_ok }
+
+    describe '#headers' do
+      subject { response.headers }
+
+      it { should be_has_key('X-SpeedGun-Profile-Id') }
+    end
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should_not include('speed-gun') }
     end
   end
 end
