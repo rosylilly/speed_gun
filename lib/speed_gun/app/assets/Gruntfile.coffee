@@ -7,8 +7,6 @@ module.exports = (grunt) ->
       tasks: ['coffee','uglify']
     coffee:
       compile:
-        options:
-          sourceMap: true
         files: [
             expand: true,
             cwd: 'coffee/',
@@ -18,9 +16,6 @@ module.exports = (grunt) ->
         ]
     uglify:
       compress_target:
-        options:
-          sourceMap: (fileName) ->
-            fileName.replace /\.js$/, '.js.map'
         files: [
             expand: true,
             cwd: 'uncompressed-js/',
