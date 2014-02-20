@@ -37,6 +37,7 @@ class SpeedGun::Middleware
   end
 
   def call_with_speed_gun(env)
+    SpeedGun.current_profile.activate!
     SpeedGun.current_profile.request_method = env['REQUEST_METHOD'].to_s.upcase
     SpeedGun.current_profile.path = env['PATH_INFO'].to_s
     SpeedGun.current_profile.query = env['QUERY_STRING'].to_s
