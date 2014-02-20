@@ -47,4 +47,13 @@ describe SpeedGun do
       it { should_not be_enabled }
     end
   end
+
+  describe '#profile' do
+    it 'profile block' do
+      args = %w(name arg)
+      described_class.config.default_profiler.
+        should_receive(:profile).with(*args)
+      described_class.profile(*args)
+    end
+  end
 end

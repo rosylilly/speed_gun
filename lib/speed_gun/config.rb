@@ -1,5 +1,6 @@
 require 'hashie'
 require 'speed_gun'
+require 'speed_gun/profiler'
 require 'speed_gun/store/memory_store'
 
 class SpeedGun::Config < Hashie::Dash
@@ -30,6 +31,10 @@ class SpeedGun::Config < Hashie::Dash
   # @!attribute [rw]
   # @return [Boolean] true if show meter
   property :show_meter, default: true
+
+  # @!attribute [rw]
+  # @return [#profile] a default profiler class
+  property :default_profiler, default: SpeedGun::Profiler
 
   # @return [true]
   def enable!

@@ -45,7 +45,7 @@ module SpeedGun
 
     # @see SpeedGun::Profiler#profile
     def profile(*args, &block)
-      SpeedGun::Profiler.profile(*args, &block)
+      current_config.default_profiler.profile(*args, &block)
     end
   end
 end
