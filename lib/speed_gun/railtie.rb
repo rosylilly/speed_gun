@@ -5,6 +5,7 @@ class SpeedGun::Railtie < ::Rails::Railtie
     app.middleware.insert(0, SpeedGun::Middleware)
 
     SpeedGun.config.enable = Rails.env.development?
+    SpeedGun.config.show_meter = Rails.env.development?
     SpeedGun.config.logger = Rails.logger
     SpeedGun.config.skip_paths.push(
       /^#{Regexp.escape(app.config.assets.prefix)}/
