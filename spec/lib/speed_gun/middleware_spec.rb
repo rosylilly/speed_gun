@@ -17,7 +17,7 @@ describe SpeedGun::Middleware do
           [
             200,
             { 'Content-Type' => 'text/html' },
-            "<html><BODY><h1>Skip</h1></BODY>\n \t</html>"
+            ["<html><BODY><h1>Skip</h1></BODY>\n \t</html>"]
           ]
         end
 
@@ -60,6 +60,12 @@ describe SpeedGun::Middleware do
       subject { response.headers }
 
       it { should_not be_has_key('X-SpeedGun-Profile-Id') }
+    end
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should include('Skip') }
     end
   end
 

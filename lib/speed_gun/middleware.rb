@@ -42,16 +42,19 @@ class SpeedGun::Middleware
     SpeedGun.current_profile.path = env['PATH_INFO'].to_s
     SpeedGun.current_profile.query = env['QUERY_STRING'].to_s
 
-    response = SpeedGun::Profiler::RackProfier.profile do
+    status, headers, body = SpeedGun::Profiler::RackProfier.profile do
       call_without_speed_gun(env)
     end
+    response = Rack::Response.new([], status, headers)
 
-    SpeedGun.current_profile.status = response[0]
+    SpeedGun.current_profile.status = status
 
     if SpeedGun.current_profile.active?
-      inject_header(response[1])
-      if SpeedGun.current_config.auto_inject?
-        response = inject_body(*response)
+      inject_header(response)
+      if inject_body?(response)
+        inject_body(response, body)
+      else
+        response.write(body)
       end
     end
 
@@ -63,17 +66,18 @@ class SpeedGun::Middleware
     SpeedGun.discard_profile!
   end
 
-  def inject_header(headers)
-    headers['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
+  def inject_header(response)
+    response['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
   end
 
-  def inject_body(status, headers, body)
-    unless headers['Content-Type'] =~ /text\/html/
-      return [status, headers, body]
-    end
+  def inject_body?(response)
+    (
+      SpeedGun.current_config.auto_inject? &&
+      response['Content-Type'] =~ /text\/html/
+    )
+  end
 
-    response = Rack::Response.new([], status, headers)
-
+  def inject_body(response, body)
     body = [body] if body.kind_of?(String)
     body.each { |fragment| response.write(inject_fragment(fragment)) }
     body.close if body.respond_to?(:close)
