@@ -69,6 +69,10 @@ class SpeedGun::Middleware
 
   def inject_profile_id(response)
     response['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
+    response.set_cookie(
+      SpeedGun.current_config.cookie_name,
+      SpeedGun.current_profile.id
+    ) if SpeedGun.current_config.browser_profiling
   end
 
   def inject_body?(response)

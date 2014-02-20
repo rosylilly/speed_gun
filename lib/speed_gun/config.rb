@@ -25,8 +25,12 @@ class SpeedGun::Config < Hashie::Dash
   property :auto_inject, default: true
 
   # @!attribute [rw]
-  # @return [Boolean] true if enable profiling javascript
-  property :javascript_profiling, default: true
+  # @return [Boolean] true if enable profiling in browser
+  property :browser_profiling, default: true
+
+  # @!attribute [rw]
+  # @return [String] cookie name using on browser profiling
+  property :cookie_name, default: '__spid'
 
   # @!attribute [rw]
   # @return [Boolean] true if show meter
