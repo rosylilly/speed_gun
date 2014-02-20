@@ -45,7 +45,7 @@ class SpeedGun::Profile
     @id = SecureRandom.uuid
     @events = []
     @config = config
-    @active = true
+    @active = false
   end
 
   # Record an event
