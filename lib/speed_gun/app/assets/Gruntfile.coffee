@@ -4,16 +4,22 @@ module.exports = (grunt) ->
   grunt.initConfig(
     watch:
       files: ['coffee/**/*.coffee'],
-      tasks: ['coffee','uglify']
+      tasks: ['coffee','concat','uglify']
     coffee:
       compile:
         files: [
             expand: true,
             cwd: 'coffee/',
             src: ['**/*.coffee'],
-            dest: 'uncompressed-js/',
+            dest: 'src/',
             ext: '.js'
         ]
+    concat:
+      options:
+        separator: ';'
+      dist:
+        src: ['src/json2.js', 'src/speed_gun.js'],
+        dest: 'uncompressed-js/speed_gun.js'
     uglify:
       compress_target:
         files: [
@@ -25,6 +31,7 @@ module.exports = (grunt) ->
         ]
   )
 
+  grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
