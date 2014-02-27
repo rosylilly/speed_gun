@@ -47,6 +47,18 @@ describe SpeedGun::Middleware do
 
         run process
       end
+
+      map '/stream' do
+        process = lambda do |env|
+          [
+            200,
+            { 'Content-Type' => 'text/html' },
+            %w(<html> <body> <h1> stream </h1> </body> </html>)
+          ]
+        end
+
+        run process
+      end
     end
     builder.to_app
   end
@@ -102,6 +114,24 @@ describe SpeedGun::Middleware do
       subject { response.body }
 
       it { should_not include('speed-gun') }
+    end
+  end
+
+  describe 'GET /stream' do
+    subject(:response) { get '/stream' }
+
+    it { should be_ok }
+
+    describe '#headers' do
+      subject { response.headers }
+
+      it { should be_has_key('X-SpeedGun-Profile-Id') }
+    end
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should include('speed-gun') }
     end
   end
 end

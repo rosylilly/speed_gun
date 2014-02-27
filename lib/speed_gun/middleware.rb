@@ -59,7 +59,7 @@ class SpeedGun::Middleware
       end
     end
 
-    response
+    response.finish
   ensure
     if SpeedGun.current_profile.active?
       SpeedGun.config.store.save(SpeedGun.current_profile)
@@ -93,8 +93,6 @@ class SpeedGun::Middleware
     body = [body] if body.kind_of?(String)
     body.each { |fragment| response.write(inject_fragment(fragment)) }
     body.close if body.respond_to?(:close)
-
-    response.finish
   end
 
   def inject_fragment(body)
