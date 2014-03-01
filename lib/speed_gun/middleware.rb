@@ -50,10 +50,7 @@ class SpeedGun::Middleware
   end
 
   def call_with_speed_gun(env)
-    SpeedGun.current_profile.activate!
-    SpeedGun.current_profile.request_method = env['REQUEST_METHOD'].to_s.upcase
-    SpeedGun.current_profile.path = env['PATH_INFO'].to_s
-    SpeedGun.current_profile.query = env['QUERY_STRING'].to_s
+    activate_profile!(env)
 
     status, headers, body = SpeedGun::Profiler::RackProfier.profile do
       call_without_speed_gun(env)
@@ -78,6 +75,13 @@ class SpeedGun::Middleware
       SpeedGun.config.store.save(SpeedGun.current_profile)
     end
     SpeedGun.discard_profile!
+  end
+
+  def activate_profile!(env)
+    SpeedGun.current_profile.activate!
+    SpeedGun.current_profile.request_method = env['REQUEST_METHOD'].to_s.upcase
+    SpeedGun.current_profile.path = env['PATH_INFO'].to_s
+    SpeedGun.current_profile.query = env['QUERY_STRING'].to_s
   end
 
   def set_profile_id_tracking?
