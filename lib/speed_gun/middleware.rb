@@ -1,4 +1,5 @@
 require 'speed_gun'
+require 'speed_gun/app'
 require 'speed_gun/template'
 require 'speed_gun/profiler/rack_profiler'
 
@@ -15,6 +16,8 @@ class SpeedGun::Middleware
   #
   # @return [Rack::Response]
   def call(env)
+    return call_with_speed_gun_app(env) if under_speed_gun?(env)
+
     if with_speed_gun?(env)
       call_with_speed_gun(env)
     else
@@ -24,12 +27,22 @@ class SpeedGun::Middleware
 
   private
 
+  def under_speed_gun?(env)
+    SpeedGun.enabled? && env['PATH_INFO'].match(/^#{SpeedGun.config.prefix}/x)
+  end
+
   def with_speed_gun?(env)
     SpeedGun.enabled? && !skip?(env['PATH_INFO'])
   end
 
   def skip?(path)
     SpeedGun.config.skip_paths.any? { |regexp| regexp.match(path) }
+  end
+
+  def call_with_speed_gun_app(env)
+    env['PATH_INFO'].sub!(/\A#{Regexp.escape(SpeedGun.config.prefix)}/, '')
+
+    SpeedGun::App.call(env)
   end
 
   def call_without_speed_gun(env)

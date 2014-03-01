@@ -63,6 +63,18 @@ describe SpeedGun::Middleware do
     builder.to_app
   end
 
+  describe 'GET /speed_gun/version' do
+    subject(:response) { get '/speed_gun/version' }
+
+    it { should be_ok }
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should eq(SpeedGun::VERSION) }
+    end
+  end
+
   describe 'GET /skip' do
     subject(:response) { get '/skip' }
 

@@ -40,6 +40,10 @@ class SpeedGun::Config < Hashie::Dash
   # @return [#profile] a default profiler class
   property :default_profiler, default: SpeedGun::Profiler
 
+  # @!attribute [rw]
+  # @return [String] URL prefix of speed gun api/web front
+  property :prefix, default: '/speed_gun'
+
   # @return [true]
   def enable!
     self[:enable] = true
