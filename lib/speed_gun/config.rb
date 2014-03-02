@@ -1,5 +1,6 @@
 require 'hashie'
 require 'speed_gun'
+require 'speed_gun/profiler'
 require 'speed_gun/store/memory_store'
 
 class SpeedGun::Config < Hashie::Dash
@@ -22,6 +23,26 @@ class SpeedGun::Config < Hashie::Dash
   # @!attribute [rw]
   # @return [Boolean] true if enable auto injection
   property :auto_inject, default: true
+
+  # @!attribute [rw]
+  # @return [Boolean] true if enable profiling in browser
+  property :browser_profiling, default: true
+
+  # @!attribute [rw]
+  # @return [String] cookie name using on browser profiling
+  property :cookie_name, default: '__spid'
+
+  # @!attribute [rw]
+  # @return [Boolean] true if show meter
+  property :show_meter, default: true
+
+  # @!attribute [rw]
+  # @return [#profile] a default profiler class
+  property :default_profiler, default: SpeedGun::Profiler
+
+  # @!attribute [rw]
+  # @return [String] URL prefix of speed gun api/web front
+  property :prefix, default: '/speed_gun'
 
   # @return [true]
   def enable!

@@ -45,7 +45,7 @@ class SpeedGun::Profile
     @id = SecureRandom.uuid
     @events = []
     @config = config
-    @active = true
+    @active = false
   end
 
   # Record an event
@@ -60,30 +60,42 @@ class SpeedGun::Profile
     @events.push(event)
   end
 
+  # @return [Boolean] true if the profile is activated
   def active?
     @active
   end
 
+  # @return [Boolean] true if the profile is deactivated
   def deactive?
     !active?
   end
 
+  # Activate the profile
+  #
+  # @return [true]
   def activate!
     @active = true
   end
 
+  # Deactivate the profile
+  #
+  # @return [false]
   def deactivate!
     @active = false
   end
 
+  # @return [Time] started time of an earliest recorded event
   def earliest_started_at
     @events.sort_by(&:started_at).first.started_at
   end
 
+  # @return [Time, nil] finished time of a latest recorded event
   def latest_finished_at
-    @events.sort_by { |event| event.finished_at || 0 }.last.finished_at
+    latest_event = @events.sort_by { |event| event.finished_at || 0 }.last
+    latest_event ? latest_event.finished_at : nil
   end
 
+  # @return [Float] time of the profile time
   def duration
     finished_at = latest_finished_at
     finished_at ? finished_at - earliest_started_at : 0

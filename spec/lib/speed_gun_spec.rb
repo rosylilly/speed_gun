@@ -13,15 +13,13 @@ describe SpeedGun do
     let(:profile) { double }
     subject(:current_profile) { described_class.current_profile }
 
-    it 'defaults to be nil' do
-      expect(current_profile).to be_nil
-    end
-
     it 'thread localy' do
       described_class.current_profile = profile
       expect(current_profile).to eq(profile)
 
-      thread = Thread.new { expect(described_class.current_profile).to be_nil }
+      thread = Thread.new do
+        expect(described_class.current_profile).to_not eq(profile)
+      end
       thread.join
     end
   end
@@ -32,7 +30,7 @@ describe SpeedGun do
     it 'discards current profile' do
       described_class.current_profile = profile
       described_class.discard_profile!
-      expect(described_class.current_profile).to be_nil
+      expect(described_class.current_profile).to_not eq(profile)
     end
   end
 
@@ -47,6 +45,15 @@ describe SpeedGun do
       before { described_class.config.stub(enabled?: false) }
 
       it { should_not be_enabled }
+    end
+  end
+
+  describe '#profile' do
+    it 'profile block' do
+      args = %w(name arg)
+      described_class.config.default_profiler.
+        should_receive(:profile).with(*args)
+      described_class.profile(*args)
     end
   end
 end

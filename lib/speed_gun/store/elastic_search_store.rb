@@ -5,12 +5,18 @@ class SpeedGun::Store::ElasticSearchStore < SpeedGun::Store
 
   def initialize(options = {})
     @index = options[:index] || DEFAULT_INDEX
-    @async = options.fetch(:async, true)
     @client = options[:client] || default_clinet(options)
   end
 
   def save(object)
-    @async ? save_with_async(object) : save_without_async(object)
+    @client.index(
+      index: @index,
+      type: underscore(object.class.name),
+      id: object.id,
+      body: object.to_hash.merge(
+        '@timestamp' => Time.now
+      )
+    )
   end
 
   def load(klass, id)
@@ -30,21 +36,6 @@ class SpeedGun::Store::ElasticSearchStore < SpeedGun::Store
   end
 
   private
-
-  def save_with_async(object)
-    Thread.new(object) { |object| save_without_async(object) }
-  end
-
-  def save_without_async(object)
-    @client.index(
-      index: @index,
-      type: underscore(object.class.name),
-      id: object.id,
-      body: object.to_hash.merge(
-        '@timestamp' => Time.now
-      )
-    )
-  end
 
   def index(klass)
     [@prefix, underscore(klass.name)].join('-')

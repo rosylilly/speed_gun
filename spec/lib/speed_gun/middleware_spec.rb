@@ -17,7 +17,7 @@ describe SpeedGun::Middleware do
           [
             200,
             { 'Content-Type' => 'text/html' },
-            "<html><BODY><h1>Skip</h1></BODY>\n \t</html>"
+            ["<html><BODY><h1>Skip</h1></BODY>\n \t</html>"]
           ]
         end
 
@@ -35,8 +35,44 @@ describe SpeedGun::Middleware do
 
         run process
       end
+
+      map '/json' do
+        process = lambda do |env|
+          [
+            200,
+            { 'Content-Type' => 'application/json' },
+            '{"text":"hi"}'
+          ]
+        end
+
+        run process
+      end
+
+      map '/stream' do
+        process = lambda do |env|
+          [
+            200,
+            { 'Content-Type' => 'text/html' },
+            %w(<html> <body> <h1> stream </h1> </body> </html>)
+          ]
+        end
+
+        run process
+      end
     end
     builder.to_app
+  end
+
+  describe 'GET /speed_gun/version' do
+    subject(:response) { get '/speed_gun/version' }
+
+    it { should be_ok }
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should eq(SpeedGun::VERSION) }
+    end
   end
 
   describe 'GET /skip' do
@@ -49,6 +85,12 @@ describe SpeedGun::Middleware do
 
       it { should_not be_has_key('X-SpeedGun-Profile-Id') }
     end
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should include('Skip') }
+    end
   end
 
   describe 'GET /html' do
@@ -60,6 +102,48 @@ describe SpeedGun::Middleware do
       subject { response.headers }
 
       it { should be_has_key('X-SpeedGun-Profile-Id') }
+    end
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should include('speed-gun') }
+    end
+  end
+
+  describe 'GET /json' do
+    subject(:response) { get '/json' }
+
+    it { should be_ok }
+
+    describe '#headers' do
+      subject { response.headers }
+
+      it { should be_has_key('X-SpeedGun-Profile-Id') }
+    end
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should_not include('speed-gun') }
+    end
+  end
+
+  describe 'GET /stream' do
+    subject(:response) { get '/stream' }
+
+    it { should be_ok }
+
+    describe '#headers' do
+      subject { response.headers }
+
+      it { should be_has_key('X-SpeedGun-Profile-Id') }
+    end
+
+    describe '#body' do
+      subject { response.body }
+
+      it { should include('speed-gun') }
     end
   end
 end

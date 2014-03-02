@@ -1,4 +1,5 @@
 require 'speed_gun'
+require 'speed_gun/app'
 require 'speed_gun/template'
 require 'speed_gun/profiler/rack_profiler'
 
@@ -15,6 +16,8 @@ class SpeedGun::Middleware
   #
   # @return [Rack::Response]
   def call(env)
+    return call_with_speed_gun_app(env) if under_speed_gun?(env)
+
     if with_speed_gun?(env)
       call_with_speed_gun(env)
     else
@@ -24,6 +27,10 @@ class SpeedGun::Middleware
 
   private
 
+  def under_speed_gun?(env)
+    SpeedGun.enabled? && env['PATH_INFO'].match(/^#{SpeedGun.config.prefix}/x)
+  end
+
   def with_speed_gun?(env)
     SpeedGun.enabled? && !skip?(env['PATH_INFO'])
   end
@@ -32,30 +39,37 @@ class SpeedGun::Middleware
     SpeedGun.config.skip_paths.any? { |regexp| regexp.match(path) }
   end
 
+  def call_with_speed_gun_app(env)
+    env['PATH_INFO'].sub!(/\A#{Regexp.escape(SpeedGun.config.prefix)}/, '')
+
+    SpeedGun::App.call(env)
+  end
+
   def call_without_speed_gun(env)
     @app.call(env)
   end
 
   def call_with_speed_gun(env)
-    SpeedGun.current_profile = SpeedGun::Profile.new
-    SpeedGun.current_profile.request_method = env['REQUEST_METHOD'].to_s.upcase
-    SpeedGun.current_profile.path = env['PATH_INFO'].to_s
-    SpeedGun.current_profile.query = env['QUERY_STRING'].to_s
+    activate_profile!(env)
 
-    response = SpeedGun::Profiler::RackProfier.profile do
+    status, headers, body = SpeedGun::Profiler::RackProfier.profile do
       call_without_speed_gun(env)
     end
+    response = Rack::Response.new([], status, headers)
 
-    SpeedGun.current_profile.status = response[0]
+    SpeedGun.current_profile.status = status
 
     if SpeedGun.current_profile.active?
-      inject_header(response[1])
-      if SpeedGun.current_profile.config.auto_inject?
-        response = inject_body(*response)
+      inject_profile_id(response)
+
+      if inject_body?(response)
+        inject_body(response, body)
+      else
+        response.write(body)
       end
     end
 
-    response
+    response.finish
   ensure
     if SpeedGun.current_profile.active?
       SpeedGun.config.store.save(SpeedGun.current_profile)
@@ -63,22 +77,39 @@ class SpeedGun::Middleware
     SpeedGun.discard_profile!
   end
 
-  def inject_header(headers)
-    headers['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
+  def activate_profile!(env)
+    SpeedGun.current_profile.activate!
+    SpeedGun.current_profile.request_method = env['REQUEST_METHOD'].to_s.upcase
+    SpeedGun.current_profile.path = env['PATH_INFO'].to_s
+    SpeedGun.current_profile.query = env['QUERY_STRING'].to_s
   end
 
-  def inject_body(status, headers, body)
-    unless headers['Content-Type'] =~ /text\/html/
-      return [status, headers, body]
-    end
+  def set_profile_id_tracking?
+    (
+      SpeedGun.current_config.browser_profiling &&
+      SpeedGun.current_profile.request_method == 'GET'
+    )
+  end
 
-    response = Rack::Response.new([], status, headers)
+  def inject_profile_id(response)
+    response['X-SpeedGun-Profile-Id'] = SpeedGun.current_profile.id
+    response.set_cookie(
+      SpeedGun.current_config.cookie_name,
+      SpeedGun.current_profile.id
+    ) if set_profile_id_tracking?
+  end
 
+  def inject_body?(response)
+    (
+      SpeedGun.current_config.auto_inject? &&
+      response['Content-Type'] =~ /text\/html/
+    )
+  end
+
+  def inject_body(response, body)
     body = [body] if body.kind_of?(String)
     body.each { |fragment| response.write(inject_fragment(fragment)) }
     body.close if body.respond_to?(:close)
-
-    response.finish
   end
 
   def inject_fragment(body)

@@ -4,7 +4,9 @@ class SpeedGun::Profiler::ActiveSupportNotificatiosProfiler < SpeedGun::Profiler
   def self.subscribe(event, ignore_payload = [])
     klass = self
     ActiveSupport::Notifications.subscribe(event) do |*args|
-      klass.record(event, *args, ignore_payload)
+      if SpeedGun.current_profile.active?
+        klass.record(event, *args, ignore_payload)
+      end
     end
   end
 

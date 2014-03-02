@@ -14,7 +14,7 @@ module SpeedGun
 
     # @return [SpeedGun::Profile, nil] the profile of a current thread
     def current_profile
-      Thread.current[:speed_gun_current_profile]
+      Thread.current[:speed_gun_current_profile] ||= SpeedGun::Profile.new
     end
 
     # Set the profile of a current thread
@@ -32,10 +32,20 @@ module SpeedGun
       self.current_profile = nil
     end
 
+    # @return [SpeedGun::Config] the config of a current profile
+    def current_config
+      current_profile.config
+    end
+
     # @see SpeedGun::Config#enabled?
     # @return [Boolean] true if enabled speed gun
     def enabled?
       config.enabled?
+    end
+
+    # @see SpeedGun::Profiler#profile
+    def profile(*args, &block)
+      current_config.default_profiler.profile(*args, &block)
     end
   end
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe SpeedGun::Profile do
-  subject(:profile) { described_class.new }
+  subject(:profile) { described_class.new.tap(&:activate!) }
 
   describe '#id' do
     subject { profile.id }
@@ -27,10 +27,20 @@ describe SpeedGun::Profile do
     end
   end
 
+  describe '#deactivate!' do
+    it 'deactivate self' do
+      expect(profile).to be_active
+      profile.deactivate!
+      expect(profile).to be_deactive
+    end
+  end
+
   describe '#to_hash' do
     let(:event) { SpeedGun::Event.new('spec.test') }
 
-    before { profile.record!(event) }
+    before do
+      profile.record!(event)
+    end
 
     it 'valid serialize' do
       expect(
