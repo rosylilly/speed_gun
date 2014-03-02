@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec', '~> 2.14.1'
-  spec.add_development_dependency 'simplecov', '~> 0.8.2'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'simplecov-console'
   spec.add_development_dependency 'rack-test'
   spec.add_development_dependency 'coveralls'
@@ -29,5 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'hashie'
   spec.add_dependency 'msgpack'
   spec.add_dependency 'slim'
-  spec.add_dependency 'sinatra'
+  spec.add_dependency 'sinatra', '~> 1.4.4'
 end
